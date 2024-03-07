@@ -23,7 +23,7 @@ except ImportError:
 
 #from NetatmoOauth import NetatmoCloud
 from NetatmoWeather import NetatmoWeather
-from  udiNetatmoWeatherMain import udiNetatmoWeatherMain
+from  udiNetatmoEnergyMain import udiNetatmoWeatherMain
 #from nodes.controller import Controller
 #from udi_interface import logging, Custom, Interface
 version = '0.1.1'
