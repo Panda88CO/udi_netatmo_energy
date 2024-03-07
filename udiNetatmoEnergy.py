@@ -22,7 +22,7 @@ except ImportError:
     logging.basicConfig(level=logging.DEBUG)
 
 #from NetatmoOauth import NetatmoCloud
-from NetatmoWeather import NetatmoWeather
+from NetatmoEnergy import NetatmoWeather
 from  udiNetatmoEnergyMain import udiNetatmoWeatherMain
 #from nodes.controller import Controller
 #from udi_interface import logging, Custom, Interface
@@ -172,6 +172,9 @@ class NetatmoController(udi_interface.Node):
         for home in self.home_ids:
             logging.debug('Adding from {}'.format(home))
             home_name = self.home_ids[home]['name']
+
+
+            '''
             main_modules = self.myNetatmo.get_main_modules(home)
             logging.debug('main modules {} {} '.format(home, main_modules))
             for m_module in main_modules:
@@ -201,7 +204,9 @@ class NetatmoController(udi_interface.Node):
                     logging.debug('Names: {}, Addresses {} info {}'.format(node_name , node_address, tmp_module ))
                     udiNetatmoWeatherMain(self.poly, node_address, node_address, node_name, self.myNetatmo, tmp_module)
                     primary_node_list.append(node_address)
-                    time.sleep(1)            
+                    time.sleep(1)          
+
+            '''  
         #removing unused nodes
         while not self.configDone:
             logging.info('Waiting for config to comlete')
