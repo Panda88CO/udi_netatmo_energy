@@ -309,17 +309,6 @@ class NetatmoCloud(OAuth):
     #    self.temp_unit = value
 
     
-    def get_weather_info(self):
-        logging.debug('get_weather_info')
-        api_str = '/getstationsdata'
-        res = self._callApi('GET', api_str )
-        logging.debug(res)
-
-    def get_weather_info2(self):
-        logging.debug('get_weather_info')
-        api_str = '/homestatus'
-        res = self._callApi('GET', api_str )
-        logging.debug(res)
 
     def process_homes_data(self, net_system):
         homes_list = {}
@@ -393,52 +382,3 @@ class NetatmoCloud(OAuth):
         '''get_home_name'''
         if home_id in self.homes_list:
             return(self.homes_list[home_id]['name'])
-
-    def get_modules_present(self, home_id):
-        '''get_modules_present'''
-        logging.debug('get_modules_present')
-        modules = {}
-        if home_id in self.homes_list:
-            for tmp in range(0,len(self.homes_list[home_id]['modules'])):
-                modules[tmp[id]] = tmp
-        return(modules)
-    
-    def get_sub_modules(self, home_id, main_module_id):
-        '''get_sub_modules'''
-        logging.debug('get_sub_modules')
-        if home_id in  self.homes_list:
-            if main_module_id in self.homes_list[home_id]['modules']:
-                if 'modules_bridged' in self.homes_list[home_id]['modules'][main_module_id]:
-                    return(self.homes_list[home_id]['modules'][main_module_id]['modules_bridged'])
-
-    def get_module_info(self, home_id, module_id):
-        '''get_module_info'''
-        logging.debug('get_module_info')
-        if home_id in  self.homes_list:
-            if module_id in self.homes_list[home_id]['modules']:
-                return(self.homes_list[home_id]['modules'][module_id])
-
-
-    def _get_modules(self, home_id, mod_type_lst):
-        '''get list of weather modules of type attached to house_id'''
-        try:
-            mod_dict = {}
-            if home_id in self.homes_list:
-               for module in self.homes_list[home_id]['modules']:
-                    if self.homes_list[home_id]['modules'][module]['type'] in mod_type_lst:
-                        mod_dict[module] = {}
-                        if 'name' in  self.homes_list[home_id]['modules'][module]:
-                            mod_dict[module]['name'] = self.homes_list[home_id]['modules'][module]['name']
-                        else:
-                            mod_dict[module]['name'] = self.homes_list[home_id]['modules'][module]['id']
-                    
-
-
-                    
-            else:
-                logging.error('No data found for {} {}'.format(home_id, mod_type_lst))
-            return(mod_dict)
-    
-        except Exception as e:
-            logging.error('Exception : {}'.format(e))
-            return(None)
