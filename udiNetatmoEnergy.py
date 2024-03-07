@@ -168,9 +168,10 @@ class NetatmoController(udi_interface.Node):
         selected = False
         self.enabled_list = []
         self.homes_list = []
-        primary_node_list = ['controller'] # controller is there for sure 
+        primary_gateway_list = ['NAPlug'] # controller is there for sure 
         for home in self.home_ids:
-            logging.debug('Adding from {}'.format(home))
+            logging.debug('Adding enegry nodes from {} - if any'.format(home))
+
             home_name = self.home_ids[home]['name']
 
 
@@ -211,7 +212,7 @@ class NetatmoController(udi_interface.Node):
         while not self.configDone:
             logging.info('Waiting for config to comlete')
             time.sleep(1)
-        logging.debug('Checking for nodes not used - node list {} - {} {}'.format(primary_node_list, len(self.nodes_in_db), self.nodes_in_db))
+        #ogging.debug('Checking for nodes not used - node list {} - {} {}'.format(primary_node_list, len(self.nodes_in_db), self.nodes_in_db))
         for nde in range(0, len(self.nodes_in_db)):
             node = self.nodes_in_db[nde]
 
