@@ -22,8 +22,8 @@ except ImportError:
     logging.basicConfig(level=logging.DEBUG)
 
 #from NetatmoOauth import NetatmoCloud
-from NetatmoEnergy import NetatmoWeather
-from  udiNetatmoEnergyMain import udiNetatmoWeatherMain
+from NetatmoEnergy import NetatmoEnergy
+from  udiNetatmoEnergyMain import udiNetatmoEnergyMain
 #from nodes.controller import Controller
 #from udi_interface import logging, Custom, Interface
 version = '0.1.1'
@@ -55,7 +55,7 @@ class NetatmoController(udi_interface.Node):
         self.address = address
         self.temp_unit = 0
         self.nodes_in_db = self.poly.getNodesFromDb()
-        self.myNetatmo = NetatmoWeather(self.poly)
+        self.myNetatmo = NetatmoEnergy(self.poly)
         self.hb  = 0
         #logging.debug('testing 1')
         #self.customParameters = Custom(self.poly, 'customparams')

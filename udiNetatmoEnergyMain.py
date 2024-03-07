@@ -21,10 +21,7 @@ except ImportError:
 
 
 from udiNetatmoWeatherIndoor import udiN_WeatherIndoor
-from udiNetatmoWeatherOutdoor import udiN_WeatherOutdoor
-from udiNetatmoWeatherRain import udiN_WeatherRain
-from udiNetatmoWeatherWind import udiN_WeatherWind
-#from nodes.controller import Controller
+
 #from udi_interface import logging, Custom, Interface
 #id = 'main_netatmo'
 
@@ -64,7 +61,7 @@ drivers = [
             ]
 '''
 
-class udiNetatmoWeatherMain(udi_interface.Node):
+class udiNetatmoEnergyMain(udi_interface.Node):
     def __init__(self, polyglot, primary, address, name, NetatmoWeather, module_info):
         super().__init__(polyglot, primary, address, name)
         self.MAIN_modules = ['NAMain']
@@ -216,12 +213,6 @@ class udiNetatmoWeatherMain(udi_interface.Node):
 
                 if module['type'] in self.INDOOR_modules:
                     udiN_WeatherIndoor(self.poly, self.primary, address, name, self.weather, self.module['home_id'], s_module)
-                elif module['type'] in self.OUTDOOR_modules:
-                    udiN_WeatherOutdoor(self.poly, self.primary, address, name, self.weather, self.module['home_id'], s_module)
-                elif module['type'] in self.WIND_modules:
-                    udiN_WeatherWind(self.poly, self.primary, address, name, self.weather, self.module['home_id'], s_module)
-                elif module['type'] in self.RAIN_modules:
-                    udiN_WeatherRain(self.poly, self.primary, address, name, self.weather, self.module['home_id'], s_module)
                 else:
                     logging.error('Unknown module type encountered: {}'.format(s_module['type']))
                 
