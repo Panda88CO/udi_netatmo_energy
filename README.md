@@ -40,17 +40,15 @@ The settings for this node are:
 #### TEMP_UNIT
    * C (default) of F
 
-#### Diffetn Weather stations
-   * Weather stations associated with teh account are listed - 1 to include 0 to disable 
+
 
 ## Requirements
 
-   * PG3x ver 3.2.18 or greater
+   * PG3x ver 3.3.0 or greater
    * UDI_interfae 3.1.1 or greater
 
 
 # Release Notes
-code somewhat based on original NEtatmoWeather node server (depreciated due to new authendication methods)
 
 - 0.1.0 02/07/2024
    - Initial version published to github - 
