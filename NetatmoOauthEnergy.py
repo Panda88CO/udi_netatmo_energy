@@ -51,7 +51,12 @@ class NetatmoCloud(OAuth):
         self.scopeList = ['read_station', 'read_magellan', 'write_magellan', 'read_bubendorff', 'write_bubendorff', 'read_smarther', 'write_smarther', 'read_thermostat','write_thermostat', 'read+_camera', 'write_camera', 'access_camera', 'read_boorbell', 'access_doorbell',
              'read_mx', 'write_mx', 'read_presence', 'write_presence', 'access_presence', 'read_homecoach', 'read_carbonmonoxidedetector', 'read_smokedetector', 'read_mhs1', 'write_mhs1']
         
-        self.poly = polyglot
+        self._dev_list  = ['NAPlug', 'NRV', 'NATherm1']
+
+        self.energy_data = {}
+        self.GW_modules = ['NAPlug']
+        self.valves =['NRV']
+        self.thermostat = ['NATherm1']
         #self.customParameters= Custom(polyglot, 'customparams')
         #self.Notices = Custom(self.poly, 'notices')
 
