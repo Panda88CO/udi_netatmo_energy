@@ -150,12 +150,15 @@ class NetatmoController(udi_interface.Node):
         time.sleep(1)
         self.poly.Notices.clear()    
 
-        self.home_ids = self.myNetatmo.get_homes()
+        self.home_ids = self.myNetatmo.get_energy_homes()
         if self.home_ids:
             self.node.setDriver('ST', 1, True, True)
 
+
         for home_id in self.home_ids:
+            logging.debug('home-is {}'.format(home_id))
             home = self.home_ids[home_id]
+            logging.debug('home {}'.format(home_id))
             if home['name'] not in self.myNetatmo.customParameters:
                 self.myNetatmo.customParameters[home['name']] == 1
             else:

@@ -454,7 +454,7 @@ class NetatmoCloud(OAuth):
               
 
     
-    def get_homes(self):
+    def get_energy_homes(self):
         '''get_homes'''
         home_list = self.get_homes_info()
         logging.debug('get_homes : {}'.format(home_list))
