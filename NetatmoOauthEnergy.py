@@ -324,6 +324,8 @@ class NetatmoCloud(OAuth):
         logging.debug('homes list: {}'.format(homes_list))
         return(homes_list)
 
+
+
     def get_homes_info(self):
         logging.debug('get_home_info')
         api_str = '/homesdata'
@@ -466,8 +468,8 @@ class NetatmoCloud(OAuth):
                 for module in home['modules']:
                     if module['type'] in self._dev_list:
                         found = True
-            if found:
-                self.energy_in_homes[home_id] = home
+                if found:
+                    self.energy_in_homes[home_id] = home
         return(self.energy_in_homes)
 
     def get_GW_modules(self, home_id):
