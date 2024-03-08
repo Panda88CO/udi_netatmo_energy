@@ -167,10 +167,7 @@ class NetatmoController(udi_interface.Node):
                 if self.myNetatmo.customParameters[home['name']] == 1:
                     self.home_list.append(home)
                     logging.info('Adding {} to node'.format(home['name']))
-
-            logging.debug('Homes with energy loop: {}'.format(self.home_list))        
-
-        logging.debug('Homes with energy: {}'.format(self.home_list))
+   
         self.temp_unit = self.convert_temp_unit(self.myNetatmo.temp_unit)
         logging.debug('TEMP_UNIT: {}'.format(self.temp_unit ))
 
@@ -187,14 +184,15 @@ class NetatmoController(udi_interface.Node):
         selected = False
         #primary_gateway_list = ['NAPlug'] # controller is there for sure 
         primary_node_list = [self.id]
-        for home in self.home_list:
-            logging.debug('Adding enegry nodes from {} - if any'.format(home))
+        for indx in range(0,len(self.home_list)):
+            home = self.home_list[indx]
+            logging.debug('Adding energy homes  {}'.format(home))
 
-            node_name = self.poly.getValidName(self.home_ids[home]['name'])
-            self.home_id = self.home_ids[home]['id']
+            node_name = self.poly.getValidName(home['name'])
+            self.home_id = home['id']
             node_address = self.poly.getValidAddress(self.home_id)
 
-            temp = udiNetatmoEnergyHome(self.poly, node_address, node_address, node_name,  self.myNetatmo, self.home_id)
+            temp = udiNetatmoEnergyHome(self.poly, node_address, node_address, node_name,  self.myNetatmo, home)
             primary_node_list.append(node_address)
             while not temp.node_ready:
                 logging.debug( 'Waiting for node {}-{} to be ready'.format(self.home_id, node_name))
