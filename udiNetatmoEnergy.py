@@ -158,9 +158,11 @@ class NetatmoController(udi_interface.Node):
         for home_id in self.home_ids:
             logging.debug('home-is {}'.format(home_id))
             home = self.home_ids[home_id]
-            logging.debug('home {}'.format(home_id))
+            logging.debug('home {}'.format(home))
             if home['name'] not in self.myNetatmo.customParameters:
-                self.myNetatmo.customParameters[home['name']] == 1
+                self.myNetatmo.customParameters[home['name']] = 1
+                self.home_list.append(home)
+                logging.info('Adding {} to node'.format(home['name']))                
             else:
                 if self.myNetatmo.customParameters[home['name']] == 1:
                     self.home_list.append(home)
@@ -182,7 +184,7 @@ class NetatmoController(udi_interface.Node):
         logging.info('Adding selected homes')
         selected = False
         #primary_gateway_list = ['NAPlug'] # controller is there for sure 
-        primary_node_list = []
+        primary_node_list = [self.id]
         for home in self.home_list:
             logging.debug('Adding enegry nodes from {} - if any'.format(home))
 
