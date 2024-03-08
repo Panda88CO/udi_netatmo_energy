@@ -154,12 +154,13 @@ class NetatmoController(udi_interface.Node):
         if self.home_ids:
             self.node.setDriver('ST', 1, True, True)
 
-        for home in self.home_ids:
+        for home_id in self.home_ids:
+            home = self.home_ids[home_id]
             if home['name'] not in self.myNetatmo.customParameters:
                 self.myNetatmo.customParameters[home['name']] == 1
             else:
                 if self.myNetatmo.customParameters[home['name']] == 1:
-                    self.homes_list.append(home)
+                    self.home_list.append(home)
                     logging.info('Adding {} to node'.format(home['name']))
 
         logging.debug('Homes with energy: ()'.format(self.home_list))
