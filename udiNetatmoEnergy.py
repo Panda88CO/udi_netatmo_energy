@@ -162,11 +162,12 @@ class NetatmoController(udi_interface.Node):
             if home['name'] not in self.myNetatmo.customParameters:
                 self.myNetatmo.customParameters[home['name']] = 1
                 self.home_list.append(home)
-                logging.info('Adding {} to node'.format(home['name']))                
+                logging.info('Adding {} to node new'.format(home['name']))                
             else:
                 if self.myNetatmo.customParameters[home['name']] == 1:
                     self.home_list.append(home)
                     logging.info('Adding {} to node'.format(home['name']))
+            logging.debug('Homes with energy loop: ()'.format(self.home_list))        
 
         logging.debug('Homes with energy: ()'.format(self.home_list))
         self.temp_unit = self.convert_temp_unit(self.myNetatmo.temp_unit)
