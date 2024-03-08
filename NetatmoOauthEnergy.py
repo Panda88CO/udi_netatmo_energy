@@ -471,7 +471,7 @@ class NetatmoCloud(OAuth):
                         found = True
                 if found:
                     self.energy_in_homes[home_id] = home
-        logging.
+        logging.debug('self.energy_in_homes {}'.format(self.energy_in_homes))
         return(self.energy_in_homes)
 
     def get_GW_modules(self, home_id):
