@@ -452,9 +452,11 @@ class NetatmoCloud(OAuth):
     def get_homes(self):
         '''get_homes'''
         home_list = self.get_homes_info()
+        logging.debug('get_homes : {}'.format(home_list))
         self.energy_in_homes = {}
-        for home in home_list:
+        for indx in range(0, len(home_list)):
             found = False
+            home = home_list[indx]
             home_id = home['id']
             if 'modules' in home:   
                 for module in home['module']:
