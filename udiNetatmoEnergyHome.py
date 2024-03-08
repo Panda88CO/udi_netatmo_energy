@@ -201,7 +201,7 @@ class udiNetatmoEnergyHome(udi_interface.Node):
         if 'rooms' in self._home:
             for indx in range(0, len(self._home['rooms'])):
                 room_info = self._home['rooms'][indx]
-                rm_name = room_info['Name']
+                rm_name = room_info['name']
                 node_name = self.poly.getValidName(rm_name)
                 room_id = room_info['id']
                 node_address = self.poly.getValidAddress(room_id)
