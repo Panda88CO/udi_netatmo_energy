@@ -20,7 +20,7 @@ except ImportError:
     logging.basicConfig(level=logging.DEBUG)
 
 
-from udiNetatmoWeatherIndoor import udiN_WeatherIndoor
+from udiNetatmoEnergyRoom import udiNetatmoEnergyRoom
 
 #from udi_interface import logging, Custom, Interface
 #id = 'main_netatmo'
@@ -61,20 +61,21 @@ drivers = [
             ]
 '''
 
-class udiNetatmoEnergyMain(udi_interface.Node):
-    def __init__(self, polyglot, primary, address, name, NetatmoWeather, module_info):
+class udiNetatmoEnergyHome(udi_interface.Node):
+
+    def __init__(self, polyglot, primary, address, name, myNetatmo, home):
         super().__init__(polyglot, primary, address, name)
-        self.MAIN_modules = ['NAMain']
-        self.OUTDOOR_modules = ['NAModule1']
-        self.WIND_modules = ['NAModule2']
-        self.RAIN_modules = ['NAModule3']
-        self.INDOOR_modules = ['NAModule4']
+
         self.poly = polyglot
+        self.myNetatmo = myNetatmo
+        self._home = home
+        self.home_id = home['id']
+        self.node_ready = False
         self.n_queue = []
         self.poly.subscribe(self.poly.ADDNODEDONE, self.node_queue)
-        self.module = {'module_id':module_info['main_module'], 'type':'MAIN', 'home_id':module_info['home'] }
-        logging.debug('self.module = {}'.format(self.module))
-        self.id = 'mainunit'
+        #self.module = {'module_id':module_info['main_module'], 'type':'MAIN', 'home_id':module_info['home'] }
+        #logging.debug('self.module = {}'.format(self.module))
+        self.id = 'house'
         self.drivers = [
             {'driver' : 'CLITEMP', 'value': 99,  'uom':25}, 
             {'driver' : 'CO2LVL', 'value': 99,  'uom':25}, 
@@ -94,7 +95,7 @@ class udiNetatmoEnergyMain(udi_interface.Node):
         self.address = address
         self.name = name
 
-        self.weather = NetatmoWeather
+        #self.weather = NetatmoWeather
         #self.home_id = module_info['home']
         #self.main_module_id = module_info['main_module']
 
@@ -107,7 +108,7 @@ class udiNetatmoEnergyMain(udi_interface.Node):
         polyglot.ready()
         self.poly.addNode(self)
         self.wait_for_node_done()
-        
+        self.node_ready = True
         self.node = self.poly.getNode(address)
         logging.info('Start {} main module Node'.format(self.name))  
         time.sleep(1)
@@ -185,7 +186,7 @@ class udiNetatmoEnergyMain(udi_interface.Node):
 
 
     def start(self):
-        logging.debug('Executing NetatmoWeatherMain start')
+        logging.debug('Executing udiNetatmoEnergyHome start')
         self.addNodes()
         self.update() # get latest data 
 
@@ -194,31 +195,28 @@ class udiNetatmoEnergyMain(udi_interface.Node):
     
     def addNodes(self):
         '''addNodes'''
-        logging.debug('self.module {}'.format(self.module))
-        logging.debug('Adding subnodes to {}'.format(self.module['module_id']))
-        sub_modules = self.weather.get_sub_modules(self.module['home_id'], self.module['module_id'])
-        logging.debug('System sub modules: {}'.format(sub_modules))
-        if sub_modules:
-            for s_module in sub_modules:
-                logging.debug( 's_module: {}'.format(s_module))
-                module = self.weather.get_module_info(self.module['home_id'], s_module)
-                logging.debug( 'module: {}'.format(module))
-                if 'name' in module:
-                    name = self.getValidName(module['name'])
-                else:
-                    name = self.getValidName(module['id'])
-                address = self.getValidAddress(module['id'])
 
-                logging.debug(' types: {} {}'.format(module['type'], self.INDOOR_modules))
+        logging.debug('Adding rooms to {}'.format(self.name))
 
-                if module['type'] in self.INDOOR_modules:
-                    udiN_WeatherIndoor(self.poly, self.primary, address, name, self.weather, self.module['home_id'], s_module)
-                else:
-                    logging.error('Unknown module type encountered: {}'.format(s_module['type']))
+        if 'rooms' in self._home:
+            for indx in range(0, len(self._home['rooms'])):
+                room_info = self._home['rooms'][indx]
+                rm_name = room_info['Name']
+                node_name = self.poly.getValidName(rm_name)
+                room_id = room_info['id']
+                node_address = self.poly.getValidAddress(room_id)
+                tmp_room = udiNetatmoEnergyRoom(self.poly, self.primary, node_address, node_name, self.myNetatmo, room_info)
+                while not tmp_room.node_ready:
+                    logging.debug( 'Waiting for node {}-{} to be ready'.format(room_id, node_name))
+                    time.sleep(4)
+
+
+
                 
     def update(self, command = None):
-        self.weather.update_weather_info_cloud(self.module['home_id'])
-        self.weather.update_weather_info_instant(self.module['home_id'])
+
+        self.myNetatmo.updateHomeStatus(self.home_id)
+        #self.weather.update_weather_info_instant(self.module['home_id'])
         self.updateISYdrivers()
 
    

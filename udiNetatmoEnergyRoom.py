@@ -40,19 +40,20 @@ drivers = [
             ]
 '''
 
-class udiN_WeatherIndoor(udi_interface.Node):
-    def __init__(self, polyglot, primary, address, name, NetatmoWeather, home, module):
+class udiNetatmoEnergyRoom(udi_interface.Node):
+    def __init__(self, polyglot, primary, address, name, myNetatmo, room):
         super().__init__(polyglot, primary, address, name)
         self.poly = polyglot
-        self.weather= NetatmoWeather
-        self.module = {'module_id':module, 'type':'INDOOR', 'home_id':home }
+        self.weather= myNetatmo
+        self.room = room
+        #self.module = {'module_id':module, 'type':'INDOOR', 'home_id':home }
         #self.type = 'INDOOR'
         #self.home = home
         self.primary = primary
         self.address = address
         self.name = name        
         self.n_queue = []
-        self.id = 'indoor'
+        self.id = 'room'
         self.drivers = [
             {'driver' : 'CLITEMP', 'value': 0,  'uom':4}, 
             {'driver' : 'CO2LVL', 'value': 0,  'uom':54}, 
@@ -66,7 +67,7 @@ class udiN_WeatherIndoor(udi_interface.Node):
             {'driver' : 'ST', 'value': 0,  'uom':2}, 
             ]
 
-        
+        self.node_ready = False
         self.poly.subscribe(self.poly.START, self.start, address)
         #self.poly.subscribe(self.poly.STOP, self.stop)
         self.poly.subscribe(self.poly.ADDNODEDONE, self.node_queue)
@@ -79,6 +80,7 @@ class udiN_WeatherIndoor(udi_interface.Node):
         time.sleep(1)
         self.n_queue = []  
         self.nodeDefineDone = True
+        self.node_ready = True
 
     
     
@@ -149,7 +151,8 @@ class udiN_WeatherIndoor(udi_interface.Node):
         
 
     def start(self):
-        logging.debug('Executing NetatmoWeatherIndoor start')
+        logging.debug('Executing myNetatmoIndoor start')
+        
         self.updateISYdrivers()        
 
 

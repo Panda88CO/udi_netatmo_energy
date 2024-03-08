@@ -23,7 +23,7 @@ except ImportError:
 
 #from NetatmoOauth import NetatmoCloud
 from NetatmoEnergy import NetatmoEnergy
-from  udiNetatmoEnergyMain import udiNetatmoEnergyMain
+from  udiNetatmoEnergyHome import udiNetatmoEnergyHome
 #from nodes.controller import Controller
 #from udi_interface import logging, Custom, Interface
 version = '0.1.1'
@@ -72,6 +72,8 @@ class NetatmoController(udi_interface.Node):
         self.poly.subscribe(self.poly.ADDNODEDONE, self.node_queue)
         self.poly.subscribe(self.poly.POLL, self.systemPoll)
 
+
+        self.home_list = []
         #logging.debug('testing 2')
 
         self.poly.addNode(self)
@@ -152,6 +154,15 @@ class NetatmoController(udi_interface.Node):
         if self.home_ids:
             self.node.setDriver('ST', 1, True, True)
 
+        for home in self.home_ids:
+            if home['name'] not in self.myNetatmo.customParameters:
+                self.myNetatmo.customParameters[home['name']] == 1
+            else:
+                if self.myNetatmo.customParameters[home['name']] == 1:
+                    self.homes_list.append(home)
+                    logging.info('Adding {} to node'.format(home['name']))
+
+        logging.debug('Homes with energy: ()'.format(self.home_list))
         self.temp_unit = self.convert_temp_unit(self.myNetatmo.temp_unit)
         logging.debug('TEMP_UNIT: {}'.format(self.temp_unit ))
 
@@ -163,51 +174,24 @@ class NetatmoController(udi_interface.Node):
 
 
     def addNodes(self):
-
-        logging.info('Adding selected weather stations')
+        
+        logging.info('Adding selected homes')
         selected = False
-        self.enabled_list = []
-        self.homes_list = []
-        primary_gateway_list = ['NAPlug'] # controller is there for sure 
-        for home in self.home_ids:
+        #primary_gateway_list = ['NAPlug'] # controller is there for sure 
+        primary_node_list = []
+        for home in self.home_list:
             logging.debug('Adding enegry nodes from {} - if any'.format(home))
 
-            home_name = self.home_ids[home]['name']
+            node_name = self.poly.getValidName(self.home_ids[home]['name'])
+            self.home_id = self.home_ids[home]['id']
+            node_address = self.poly.getValidAddress(self.home_id)
 
-
-            '''
-            main_modules = self.myNetatmo.get_main_modules(home)
-            logging.debug('main modules {} {} '.format(home, main_modules))
-            for m_module in main_modules:
-                logging.debug('{} Evalating MAIN module {} - {}'.format(home_name, m_module, main_modules))
-                mod_name = main_modules[m_module]['name']
-                node_name = home_name + '_'+ mod_name
-                node_address = self.getValidAddress(m_module)
-                node_name = self.getValidName(node_name)
-                tmp_module = {}
-                tmp_module['home'] = home
-                tmp_module['main_module'] = m_module
-                logging.debug('Module {} enabled = {}'.format(node_name, self.myNetatmo.main_module_enabled(node_name) ))
-                if self.myNetatmo.main_module_enabled(node_name):
-                    #self.enabled_list.append(tmp_module)
-                    #logging.debug('enabled list {}'.format(self.enabled_list))
-                    if tmp_module['home'] not in self.homes_list:
-                        self.homes_list.append(tmp_module['home'])
-                        self.myNetatmo.update_weather_info_cloud(home)
-                        self.myNetatmo.update_weather_info_instant(home)
-                    #logging.debug('enabled list - outside {}'.format(self.enabled_list))
-                    #for node_nbr in range(0,len(self.enabled_list)):
-                    #module_info = self.enabled_list[node_nbr]
-                    #logging.debug('module_info {}'.format(module_info))
-                    #module = self.myNetatmo.get_module_info(tmp_module['home'],tmp_module['main_module'])
-                    #logging.debug('module info {}'.format(module))
-
-                    logging.debug('Names: {}, Addresses {} info {}'.format(node_name , node_address, tmp_module ))
-                    udiNetatmoWeatherMain(self.poly, node_address, node_address, node_name, self.myNetatmo, tmp_module)
-                    primary_node_list.append(node_address)
-                    time.sleep(1)          
-
-            '''  
+            temp = udiNetatmoEnergyHome(self.poly, node_address, node_address, node_name,  self.myNetatmo, self.home_id)
+            primary_node_list.append(node_address)
+            while not temp.node_ready:
+                logging.debug( 'Waiting for node {}-{} to be ready'.format(self.home_id, node_name))
+                time.sleep(4)
+    
         #removing unused nodes
         while not self.configDone:
             logging.info('Waiting for config to comlete')
