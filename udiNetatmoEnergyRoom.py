@@ -150,7 +150,6 @@ class udiNetatmoEnergyRoom(udi_interface.Node):
 
     def start(self):
         logging.debug('Executing udiNetatmoEnergyRoom start')
-        
         self.updateISYdrivers()        
 
 

@@ -95,7 +95,7 @@ class udiNetatmoEnergyHome(udi_interface.Node):
         self.address = address
         self.name = name
 
-        #self.weather = NetatmoWeather
+        #self.myNetatmo = NetatmoWeather
         #self.home_id = module_info['home']
         #self.main_module_id = module_info['main_module']
 
@@ -215,41 +215,41 @@ class udiNetatmoEnergyHome(udi_interface.Node):
                 
     def update(self, command = None):
 
-        self.myNetatmo.updateHomeStatus(self.home_id)
-        #self.weather.update_weather_info_instant(self.module['home_id'])
+        self.myNetatmo.get_home_status(self.home_id)
+        #self.myNetatmo.update_weather_info_instant(self.module['home_id'])
         self.updateISYdrivers()
 
    
         
     def updateISYdrivers(self):
         logging.debug('updateISYdrivers')
-        data = self.weather.get_module_data(self.module)
+        data = self.myNetatmo.get_module_data(self.module)
         logging.debug('Main module data: {}'.format(data))
         if self.node is not None:
-            if self.weather.get_online(self.module):
+            if self.myNetatmo.get_online(self.module):
                 self.node.setDriver('ST', 1)
-                logging.debug('TempUnit = {} {}'.format(self.weather.temp_unit, self.convert_temp_unit(self.weather.temp_unit)))
-                if self.convert_temp_unit(self.weather.temp_unit) == 0:
-                    self.node.setDriver('CLITEMP', round(self.weather.get_temperature_C(self.module),1), True, False, 4 )
-                    self.node.setDriver('GV6', round(self.weather.get_min_temperature_C(self.module),1), True, False, 4 )
-                    self.node.setDriver('GV7', round(self.weather.get_max_temperature_C(self.module),1), True, False, 4 )
+                logging.debug('TempUnit = {} {}'.format(self.myNetatmo.temp_unit, self.convert_temp_unit(self.myNetatmo.temp_unit)))
+                if self.convert_temp_unit(self.myNetatmo.temp_unit) == 0:
+                    self.node.setDriver('CLITEMP', round(self.myNetatmo.get_temperature_C(self.module),1), True, False, 4 )
+                    self.node.setDriver('GV6', round(self.myNetatmo.get_min_temperature_C(self.module),1), True, False, 4 )
+                    self.node.setDriver('GV7', round(self.myNetatmo.get_max_temperature_C(self.module),1), True, False, 4 )
                 else:
-                    self.node.setDriver('CLITEMP', (round(self.weather.get_temperature_C(self.module)*9/5+32,1)), True, False, 17 )
-                    self.node.setDriver('GV6', (round(self.weather.get_min_temperature_C(self.module)*9/5+32,1)), True, False, 17 )
-                    self.node.setDriver('GV7', (round(self.weather.get_max_temperature_C(self.module)*9/5+32,1)), True, False, 17 )                     
-                self.node.setDriver('CO2LVL', self.weather.get_co2(self.module), True, False, 54)
-                self.node.setDriver('CLIHUM', self.weather.get_humidity(self.module), True, False, 51)
-                self.node.setDriver('GV3', round(self.weather.get_noise(self.module),0), True, False, 12)
-                self.node.setDriver('BARPRES', round(self.weather.get_pressure(self.module),0), True, False, 117)
-                self.node.setDriver('GV5', round(self.weather.get_abs_pressure(self.module),0), True, False, 117)
+                    self.node.setDriver('CLITEMP', (round(self.myNetatmo.get_temperature_C(self.module)*9/5+32,1)), True, False, 17 )
+                    self.node.setDriver('GV6', (round(self.myNetatmo.get_min_temperature_C(self.module)*9/5+32,1)), True, False, 17 )
+                    self.node.setDriver('GV7', (round(self.myNetatmo.get_max_temperature_C(self.module)*9/5+32,1)), True, False, 17 )                     
+                self.node.setDriver('CO2LVL', self.myNetatmo.get_co2(self.module), True, False, 54)
+                self.node.setDriver('CLIHUM', self.myNetatmo.get_humidity(self.module), True, False, 51)
+                self.node.setDriver('GV3', round(self.myNetatmo.get_noise(self.module),0), True, False, 12)
+                self.node.setDriver('BARPRES', round(self.myNetatmo.get_pressure(self.module),0), True, False, 117)
+                self.node.setDriver('GV5', round(self.myNetatmo.get_abs_pressure(self.module),0), True, False, 117)
 
-                temp_trend = self.weather.get_temp_trend(self.module)
+                temp_trend = self.myNetatmo.get_temp_trend(self.module)
                 self.node.setDriver('GV8', self.trend2ISY(temp_trend))
 
-                #hum_trend= self.weather.get_hum_trend(self.module)
+                #hum_trend= self.myNetatmo.get_hum_trend(self.module)
                 #self.node.setDriver('GV9', trend_val)
-                self.node.setDriver('GV10', self.weather.get_time_since_time_stamp_min(self.module) , True, False, 44)
-                rf1, rf2 = self.weather.get_rf_info(self.module) 
+                self.node.setDriver('GV10', self.myNetatmo.get_time_since_time_stamp_min(self.module) , True, False, 44)
+                rf1, rf2 = self.myNetatmo.get_rf_info(self.module) 
                 self.node.setDriver('GV11', self.rfstate2ISY(rf1) )
                 #self.node.setDriver('ERR', 0)    
             else:

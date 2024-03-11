@@ -57,6 +57,7 @@ class NetatmoCloud(OAuth):
         self.GW_modules = ['NAPlug']
         self.valves =['NRV']
         self.thermostat = ['NATherm1']
+
         #self.customParameters= Custom(polyglot, 'customparams')
         #self.Notices = Custom(self.poly, 'notices')
 
@@ -346,20 +347,29 @@ class NetatmoCloud(OAuth):
 
 
             tmp = self._callApi('GET', api_str)
+            logging.debug('get_home_status - data:'.format(tmp))
             if tmp:
                 tmp = tmp['body']
                 if 'errors' not in tmp:
                     tmp = tmp['home']
                     status[home_id] = home_id #tmp['body']['body']['home']
-                    if 'modules' in tmp:
-                        status['modules'] = {}
-                        status['module_types'] = []
-                        for mod in range(0,len(tmp['modules'])):
-                            status['modules'][tmp['modules'][mod]['id']]= tmp['modules'][mod]
-                            status['module_types'].append(tmp['modules'][mod]['type'])
-                    logging.debug(status)
                 else:
                     status['error'] = tmp['error']
+
+                if 'modules' in tmp:
+                    status['modules'] = {}
+                    status['module_types'] = []
+                    for mod in range(0,len(tmp['modules'])):
+                        status['modules'][tmp['modules'][mod]['id']]= tmp['modules'][mod]
+                        status['module_types'].append(tmp['modules'][mod]['type'])
+                logging.debug(status)
+                if 'rooms' in tmp:
+                    status['rooms'] = {}
+                    status['module_types'] = []
+                    for mod in range(0,len(tmp['rooms'])):
+                        status['rooms']=  tmp['modules'][mod]
+  
+                self.energy_data[home_id] = status
 
                 return(status)
         except Exception as e:
@@ -372,6 +382,14 @@ class NetatmoCloud(OAuth):
         if home_id in self.homes_list:
             # Find relevan modules
             return(self.homes_list[home_id]['modules'])
+
+    def get_rooms(self, home_id):
+        '''get_modules'''
+        logging.debug('get_modules')
+        if home_id in self.homes_list:
+            # Find relevan modules
+            return(self.homes_list[home_id]['rooms'])        
+        
         
     def get_module_types(self, home_id):
         '''get_module_types'''
@@ -383,9 +401,9 @@ class NetatmoCloud(OAuth):
         if home_id in self.homes_list:
             return(self.homes_list[home_id]['name'])
 
-
+    '''
     def update_energy_info_cloud (self, home_id):
-        ''' Polls latest data stored in cloud - more data available'''
+        Polls latest data stored in cloud - more data available
         logging.debug('get_energy_info_cloud')
         try:
             tmp = self.get_modules(home_id)
@@ -444,7 +462,7 @@ class NetatmoCloud(OAuth):
         except Exception as e:
             logging.error('update_energy_info_cloud failed : {}'.format(e))
             return({})
-
+    '''
 
     def module_type (self, type):
         if type in self.GW_modules:
