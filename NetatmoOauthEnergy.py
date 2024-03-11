@@ -342,36 +342,35 @@ class NetatmoCloud(OAuth):
         logging.debug('get_home_status')
         try:
             if home_id:
-                home_id_str = urllib.parse.quote_plus(home_id )
+                home_id_str = urllib.parse.quote_plus(home_id)
                 api_str = '/homestatus?home_id='+str(home_id_str)
 
+                tmp = self._callApi('GET', api_str)
+                logging.debug('get_home_status - data:'.format(tmp))
+                if tmp:
+                    tmp = tmp['body']
+                    if 'errors' not in tmp:
+                        tmp = tmp['home']
+                        status[home_id] = home_id #tmp['body']['body']['home']
+                    else:
+                        status['error'] = tmp['error']
 
-            tmp = self._callApi('GET', api_str)
-            logging.debug('get_home_status - data:'.format(tmp))
-            if tmp:
-                tmp = tmp['body']
-                if 'errors' not in tmp:
-                    tmp = tmp['home']
-                    status[home_id] = home_id #tmp['body']['body']['home']
-                else:
-                    status['error'] = tmp['error']
-
-                if 'modules' in tmp:
-                    status['modules'] = {}
-                    status['module_types'] = []
-                    for mod in range(0,len(tmp['modules'])):
-                        status['modules'][tmp['modules'][mod]['id']]= tmp['modules'][mod]
-                        status['module_types'].append(tmp['modules'][mod]['type'])
-                logging.debug(status)
-                if 'rooms' in tmp:
-                    status['rooms'] = {}
-                    status['module_types'] = []
-                    for mod in range(0,len(tmp['rooms'])):
-                        status['rooms']=  tmp['modules'][mod]
-  
-                self.energy_data[home_id] = status
-
-                return(status)
+                    if 'modules' in tmp:
+                        status['modules'] = {}
+                        status['module_types'] = []
+                        for mod in range(0,len(tmp['modules'])):
+                            status['modules'][tmp['modules'][mod]['id']]= tmp['modules'][mod]
+                            status['module_types'].append(tmp['modules'][mod]['type'])
+                    logging.debug(status)
+                    if 'rooms' in tmp:
+                        status['rooms'] = {}
+                        status['module_types'] = []
+                        for mod in range(0,len(tmp['rooms'])):
+                            status['rooms']=  tmp['modules'][mod]
+    
+                    self.energy_data[home_id] = status
+                    logging.debug('energy_data : {} {}'.format(home_id, self.energy_data ))
+                    return(status)
         except Exception as e:
             logging.error('Error get home status : {}'.format(e))
             return(None)
