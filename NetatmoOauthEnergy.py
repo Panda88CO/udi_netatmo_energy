@@ -13,7 +13,7 @@ MIT License
 '''
 import requests
 import time
-import json
+#import json
 import urllib.parse
 from datetime import datetime, timezone
 #from udi_interface import LOGGER, Custom
@@ -390,7 +390,7 @@ class NetatmoCloud(OAuth):
             # Find relevan modules
             return(self.homes_list[home_id]['rooms'])        
         
-        
+
     def get_module_types(self, home_id):
         '''get_module_types'''
         if home_id in self.homes_list:
