@@ -309,7 +309,7 @@ if __name__ == "__main__":
         #myNetatmo = NetatmoWeather(polyglot)
 
         # then you need to create the controller node
-        NetatmoController(polyglot, 'controller', 'controller', 'Netatmo')
+        NetatmoController(polyglot, 'controller', 'controller', 'Netatmo Energy')
 
         # subscribe to the events we want
         # polyglot.subscribe(polyglot.POLL, pollHandler)
