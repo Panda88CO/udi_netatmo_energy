@@ -346,7 +346,7 @@ class NetatmoCloud(OAuth):
                 api_str = '/homestatus?home_id='+str(home_id_str)+'&'+str(dev_type)
 
                 tmp = self._callApi('GET', api_str)
-                logging.debug('get_home_status - data:'.format(tmp))
+                logging.debug('get_home_status - data: {}'.format(tmp))
                 if tmp:
                     tmp = tmp['body']
                     if 'errors' not in tmp:
