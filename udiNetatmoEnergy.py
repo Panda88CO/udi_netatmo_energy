@@ -55,7 +55,7 @@ class NetatmoController(udi_interface.Node):
         self.address = address
         self.temp_unit = 0
         self.nodes_in_db = self.poly.getNodesFromDb()
-        self.myNetatmo = NetatmoCloud(self.poly, 'read_thermostat write_thermostat')
+        self.myNetatmo = NetatmoCloud(self.poly, 'read_thermostat write_thermostat read_station')
         self.hb  = 0
         #logging.debug('testing 1')
         #self.customParameters = Custom(self.poly, 'customparams')
