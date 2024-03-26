@@ -55,7 +55,7 @@ class NetatmoController(udi_interface.Node):
         self.address = address
         self.temp_unit = 0
         self.nodes_in_db = self.poly.getNodesFromDb()
-        self.myNetatmo = NetatmoCloud(self.poly, 'read_thermostat write_thermostat read_station')
+        self.myNetatmo = NetatmoCloud(self.poly, 'read_thermostat write_thermostat')
         self.hb  = 0
         #logging.debug('testing 1')
         #self.customParameters = Custom(self.poly, 'customparams')
@@ -253,9 +253,10 @@ class NetatmoController(udi_interface.Node):
                     #self.node.setDriver('GV0', self.temp_unit, True, True)
                     
                     #self.myNetatmo.refresh_token()
-                    for home in self.homes_list:
-                        self.myNetatmo.update_weather_info_cloud(home)
-                        self.myNetatmo.update_weather_info_instant(home)
+                    self.myNetatmo.get_homes_info()
+                    for home in self.myNetatmo.homes_list:
+                        self.myNetatmo.get_home_status(home)
+                        #self.myNetatmo.update_weather_info_instant(home)
 
 
                     #nodes = self.poly.getNodes()
@@ -267,8 +268,8 @@ class NetatmoController(udi_interface.Node):
                 if 'shortPoll' in polltype:
                     self.heartbeat()
                     #self.myNetatmo.refresh_token()
-                    for home in self.homes_list:
-                        self.myNetatmo.update_weather_info_instant(home)
+                    for home in self.myNetatmo.homes_list:
+                        self.myNetatmo.get_home_status(home)
                     for nde in nodes:
                         if nde.address != 'controller':   # but not the setup node
                             logging.debug('updating node {} data'.format(nde))

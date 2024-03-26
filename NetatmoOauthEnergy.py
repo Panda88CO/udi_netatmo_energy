@@ -337,13 +337,16 @@ class NetatmoCloud(OAuth):
         return(self.homes_list)
 
 
-    def get_home_status(self, home_id, dev_type ='NAPlug'):
+    def get_home_status(self, home_id, dev_type =''):
         status = {}
         logging.debug('get_home_status')
         try:
             if home_id:
                 home_id_str = urllib.parse.quote_plus(home_id)
-                api_str = '/homestatus?home_id='+str(home_id_str)+'&'+str(dev_type)
+                if dev_type == '':
+                    api_str = '/homestatus?home_id='+str(home_id_str)
+                else:
+                    api_str = '/homestatus?home_id='+str(home_id_str)+'&'+str(dev_type)
 
                 tmp = self._callApi('GET', api_str)
                 logging.debug('get_home_status - data: {}'.format(tmp))
@@ -354,7 +357,7 @@ class NetatmoCloud(OAuth):
                         status[home_id] = home_id #tmp['body']['body']['home']
                     else:
                         status['error'] = tmp['error']
-
+                    logging.debug('get_home_status - tmp: {}'.format(tmp))
                     if 'modules' in tmp:
                         status['modules'] = {}
                         status['module_types'] = []
@@ -364,9 +367,9 @@ class NetatmoCloud(OAuth):
                     logging.debug(status)
                     if 'rooms' in tmp:
                         status['rooms'] = {}
-                        status['module_types'] = []
+                        #status['module_types'] = []
                         for mod in range(0,len(tmp['rooms'])):
-                            status['rooms']=  tmp['modules'][mod]
+                            status['rooms']=  tmp['rooms'][mod]
     
                     self.energy_data[home_id] = status
                     logging.debug('energy_data : {} {}'.format(home_id, self.energy_data ))
