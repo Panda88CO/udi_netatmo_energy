@@ -223,7 +223,7 @@ class udiNetatmoEnergyHome(udi_interface.Node):
         
     def updateISYdrivers(self):
         logging.debug('updateISYdrivers')
-        data = self.myNetatmo.get_module_data(self.module)
+        #data = self.myNetatmo.get_module_data(self.module)
         logging.debug('Main module data: {}'.format(data))
         if self.node is not None:
             if self.myNetatmo.get_online(self.module):
