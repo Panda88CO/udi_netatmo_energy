@@ -106,7 +106,7 @@ class udiNetatmoEnergyRoom(udi_interface.Node):
         self.wait_for_node_done()
         self.node_ready = True
         self.node = self.poly.getNode(address)
-        logging.info('Start {} main module Node'.format(self.name))  
+        logging.info('Start {} room Node'.format(self.name))  
         time.sleep(1)
 
        
@@ -117,7 +117,7 @@ class udiNetatmoEnergyRoom(udi_interface.Node):
     def start(self):
         logging.debug('Executing udiNetatmoEnergyHome start')
         self.addNodes()
-        self.update() # get latest data 
+        self.updateISYdrivers() 
 
     def stop (self):
         pass
@@ -135,7 +135,9 @@ class udiNetatmoEnergyRoom(udi_interface.Node):
                     node_name = self.poly.getValidName(valve_name)
                     valve_id = valve_info['id']
                     node_address = self.poly.getValidAddress(valve_id)
-                    tmp_room = udiNetatmoEnergyValve(self.poly, self.primary, node_address, node_name, self.myNetatmo, self.home_id,  valve_id)
+                    logging.debug('adding room node : {} {} {} {} {} {}'.format( self.primary, node_address, node_name, self.myNetatmo, self._home,  valve_id))
+
+                    tmp_room = udiNetatmoEnergyValve(self.poly, self.primary, node_address, node_name, self.myNetatmo, self._home,  valve_id)
                     while not tmp_room.node_ready:
                         logging.debug( 'Waiting for node {}-{} to be ready'.format(valve_id, node_name))
                         time.sleep(4)
@@ -144,6 +146,7 @@ class udiNetatmoEnergyRoom(udi_interface.Node):
 
                 
     def update(self, command = None):
+        logging.debug('update room data {}'.format(self._home))
         self.myNetatmo.get_home_status(self._home)
         #self.myNetatmo.update_weather_info_instant(self.module['home_id'])
         self.updateISYdrivers()

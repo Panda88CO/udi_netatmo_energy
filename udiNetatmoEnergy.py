@@ -203,6 +203,7 @@ class NetatmoController(udi_interface.Node):
                         node_name = home_name+'-'+room_name
                         room_id = 'room'+str(room['id'])
                         node_address = self.poly.getValidAddress(room_id)
+                        logging.debug('adding room node : {} {} {} {} {} {}'.format(node_address, node_address, node_name,  self.myNetatmo, home, room_id))
                         temp = udiNetatmoEnergyRoom(self.poly, node_address, node_address, node_name,  self.myNetatmo, home, room_id)
                         primary_node_list.append(node_address)
                         while not temp.node_ready:

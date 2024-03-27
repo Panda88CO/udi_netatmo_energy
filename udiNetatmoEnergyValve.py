@@ -71,7 +71,7 @@ class udiNetatmoEnergyValve(udi_interface.Node):
         self.poly.addNode(self)
         self.wait_for_node_done()
         self.node = self.poly.getNode(address)
-        logging.info('Start {} Indoor Node'.format(self.name))  
+        logging.info('Start {} valve Node'.format(self.name))  
         time.sleep(1)
         self.n_queue = []  
         self.nodeDefineDone = True
