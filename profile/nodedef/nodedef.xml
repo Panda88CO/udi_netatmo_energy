@@ -2,7 +2,7 @@
   <nodeDef id="controller" nls="ctl">
     <editors />
     <sts>
-      <st id="ST" editor="bool" />
+      <st id="ST" editor="connect" />
     </sts>
     <cmds>
       <sends />
@@ -13,108 +13,45 @@
     </cmds>
   </nodeDef>
 
-  <nodeDef id="mainunit" nls="MAIN">
+  <nodeDef id="room" nls="n_room">
     <sts>
-      <st id="ST" editor="bool" />
+      <st id="ST" editor="connect" />
       <st id="CLITEMP" editor="temperature" />
-      <st id="CO2LVL" editor="co2" />
-      <st id="CLIHUM" editor="humidity" />
-      <st id="GV3" editor="noise" />
-      <st id="BARPRES" editor="pressure" />
-      <st id="GV5" editor="pressure" />
-      <st id="GV6" editor="temperature" />
-      <st id="GV7" editor="temperature" />
-      <st id="GV8" editor="trend" />
-      <!--<st id="GV9" editor="trend" /> -->
-      <st id="GV10" editor="t_timestamp" />
-      <st id="GV11" editor="rf_status" />
+      <st id="CLISPH" editor="temperature" />
+      <st id="CLIMD" editor="t_ctrl_mode" />
+      <st id="GV0" editor="energy_req" />
+      <st id="GV1" editor="bool" />
+      <st id="GV2" editor="bool" />
+      <st id="GV3" editor="t_timestamp" />     
     </sts>
     <cmds>
       <sends />
       <accepts>
         <cmd id="UPDATE" />  
+        <cmd id="SETPOINT" >
+                <p id="" editor="set_temp" init="CLISPH"/>
+        </cmd>      
+        <cmd id="OPMODE" >
+                <p id="" editor="setCLIMD" init="CLIMD"/> 
+        </cmd>          
+</accepts>
+    </cmds>
+  </nodeDef>
+
+  <nodeDef id="valve" nls="n_valve">
+    <sts>
+      <st id="ST" editor="connect" />
+      <st id="BATLVL" editor="bat_value" />
+      <st id="GV0" editor="battery" />
+      <st id="GV1" editor="rf_strength" />
+    </sts>
+    <cmds>
+      <sends />
+      <accepts> 
       </accepts>
     </cmds>
   </nodeDef>
 
-  <nodeDef id="indoor" nls="INDM">
-    <sts>
-      <st id="ST" editor="bool" />
-      <st id="CLITEMP" editor="temperature" />
-      <st id="CO2LVL" editor="co2" />
-      <st id="CLIHUM" editor="humidity" />
-      <st id="GV3" editor="temperature" />
-      <st id="GV4" editor="temperature" />
-      <st id="GV5" editor="trend" />
-      <st id="GV6" editor="t_timestamp" />
-      <st id="GV7" editor="battery" />
-      <st id="GV8" editor="rf_status" />
-    </sts>
-    <cmds>
-      <sends />
-      <accepts>
-        <cmd id="UPDATE" />   
-      </accepts>
-    </cmds>
-  </nodeDef>
-
-  <nodeDef id="outdoor" nls="OUTM">
-    <sts>
-      <st id="ST" editor="bool" />
-      <st id="CLITEMP" editor="temperature" />
-      <st id="CLIHUM" editor="humidity" />
-      <st id="GV2" editor="temperature" />
-      <st id="GV3" editor="temperature" />
-      <st id="GV4" editor="trend" />
-      <st id="GV5" editor="t_timestamp" />
-      <st id="GV6" editor="battery" />
-      <st id="GV7" editor="rf_status" />
-    </sts>
-    <cmds>
-      <sends />
-      <accepts>
-      <cmd id="UPDATE" />   
-      </accepts>
-    </cmds>
-  </nodeDef>
-
-  <nodeDef id="wind" nls="WINM">
-    <sts>
-      <st id="ST" editor="bool" />
-      <st id="GV0" editor="w_strength" />
-      <st id="GV1" editor="w_angle" />
-      <st id="GV2" editor="w_strength" />
-      <st id="GV3" editor="w_angle" />
-      <st id="GV4" editor="w_strength" />
-      <st id="GV5" editor="w_angle" />
-      <st id="GV6" editor="t_timestamp" />
-      <st id="GV7" editor="battery" />
-      <st id="GV8" editor="rf_status" />
-    </sts>
-    <cmds>
-      <sends />
-      <accepts>
-        <cmd id="UPDATE" />        
-      </accepts>
-    </cmds>
-  </nodeDef>
-
-  <nodeDef id="rain" nls="RAIM">
-    <sts>
-      <st id="ST" editor="bool" />
-      <st id="GV0" editor="rain" />
-      <st id="GV1" editor="rain" />
-      <st id="GV2" editor="rain" />
-      <st id="GV3" editor="t_timestamp" />
-      <st id="GV4" editor="battery" />
-      <st id="GV5" editor="rf_status" />
-    </sts>
-    <cmds>
-      <sends />
-      <accepts>
-        <cmd id="UPDATE" />    
-      </accepts>
-    </cmds>
-  </nodeDef>
+  
 
 </nodeDefs>

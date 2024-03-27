@@ -64,7 +64,8 @@
 			'id': 4, 
 			'type': 5, 
 			'rooms_temp': 
-				[{'room_id': '3956476596', 'temp': 16}, 
+				[
+				{'room_id': '3956476596', 'temp': 16}, 
 				{'room_id': '1685564732', 'temp': 16}, 
 				{'room_id': '1939341551', 'temp': 16}, 
 				{'room_id': '3750716268', 'temp': 16}], 
@@ -73,7 +74,7 @@
 				{'id': '3956476596', 'therm_setpoint_temperature': 16}, 
 				{'id': '1685564732', 'therm_setpoint_temperature': 16}, 
 				{'id': '1939341551', 'therm_setpoint_temperature': 16}, 
-			{'id': '3750716268', 'therm_setpoint_temperature': 16}]}, 
+				{'id': '3750716268', 'therm_setpoint_temperature': 16}]}, 
 		{	'name': 'Comfort', 
 			'id': 0, 
 			'type': 0, 
