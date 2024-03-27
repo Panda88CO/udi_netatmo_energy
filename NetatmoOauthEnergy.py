@@ -96,7 +96,7 @@ class NetatmoCloud(OAuth):
             logging.debug('Waiting for oauthHandler to complete')
             time.sleep(5)
         super().oauthHandler(token)
-        #self.customOauthHandlerDone = True
+        self.customOauthHandlerDone = True
         logging.debug('oauthHandler Finished')
 
     def customNsDone(self):

@@ -1,0 +1,124 @@
+2024-03-26 09:43:48,253 Thread-26  udi_interface      DEBUG    NetatmoOauthEnergy:get_home_status: get_home_status - data: 
+
+
+
+{'status': 'ok', 
+'time_server': 1711471428, 
+'body': 
+	{'home': 
+		{'id': '6592735f5d9734ca960f1c0b', 
+		'rooms': [
+			{'id': '1685564732', 'reachable': True, 'anticipating': False, 'heating_power_request': 0, 'open_window': False, 'therm_measured_temperature': 14, 'therm_setpoint_temperature': 7, 'therm_setpoint_mode': 'away'}, 
+			{'id': '1939341551', 'reachable': True, 'anticipating': False, 'heating_power_request': 0, 'open_window': False, 'therm_measured_temperature': 15, 'therm_setpoint_temperature': 7, 'therm_setpoint_mode': 'away'}, 
+			{'id': '3750716268', 'reachable': True, 'anticipating': False, 'heating_power_request': 0, 'open_window': False, 'therm_measured_temperature': 16, 'therm_setpoint_temperature': 7, 'therm_setpoint_mode': 'away'}, 
+			{'id': '3956476596', 'reachable': True, 'anticipating': False, 'heating_power_request': 0, 'open_window': False, 'therm_measured_temperature': 14.5, 'therm_setpoint_temperature': 7, 'therm_setpoint_mode': 'away'}], 
+		'modules': [
+			{'id': '70:ee:50:a8:10:88', 'type': 'NAPlug', 'firmware_revision': 243, 'rf_strength': 106, 'wifi_strength': 41}, 
+			{'id': '09:00:00:1e:a5:ec', 'type': 'NRV', 'battery_state': 'full', 'battery_level': 3018, 'firmware_revision': 97, 'rf_strength': 66, 'reachable': True, 'bridge': '70:ee:50:a8:10:88'}, 
+			{'id': '09:00:00:1e:91:9e', 'type': 'NRV', 'battery_state': 'full', 'battery_level': 3025, 'firmware_revision': 97, 'rf_strength': 69, 'reachable': True, 'bridge': '70:ee:50:a8:10:88'}, 
+			{'id': '09:00:00:20:66:6a', 'type': 'NRV', 'battery_state': 'full', 'battery_level': 3040, 'firmware_revision': 97, 'rf_strength': 72, 'reachable': True, 'bridge': '70:ee:50:a8:10:88'}, 
+			{'id': '09:00:00:1f:35:b0', 'type': 'NRV', 'battery_state': 'full', 'battery_level': 3022, 'firmware_revision': 97, 'rf_strength': 63, 'reachable': True, 'bridge': '70:ee:50:a8:10:88'}, 
+			{'id': '09:00:00:1f:dc:67', 'type': 'NRV', 'battery_state': 'full', 'battery_level': 3007, 'firmware_revision': 97, 'rf_strength': 64, 'reachable': True, 'bridge': '70:ee:50:a8:10:88'}, 
+			{'id': '09:00:00:1f:c8:95', 'type': 'NRV', 'battery_state': 'full', 'battery_level': 3003, 'firmware_revision': 97, 'rf_strength': 59, 'reachable': True, 'bridge': '70:ee:50:a8:10:88'}, 
+			{'id': '09:00:00:1f:e3:17', 'type': 'NRV', 'battery_state': 'full', 'battery_level': 3032, 'firmware_revision': 97, 'rf_strength': 55, 'reachable': True, 'bridge': '70:ee:50:a8:10:88'}, 
+			{'id': '70:ee:50:29:2f:e0', 'type': 'NAMain', 'firmware_revision': 203, 'wifi_state': 'full', 'wifi_strength': 18, 'ts': 1711471425, 'temperature': 15.2, 'co2': 441, 'humidity': 55, 'noise': 34, 'pressure': 1000.3, 'absolute_pressure': 997.1}, 
+			{'id': '02:00:00:29:50:6e', 'type': 'NAModule1', 'reachable': False, 'bridge': '70:ee:50:29:2f:e0'}]}}}
+
+2024-03-26 17:10:58,908 Thread-13  udi_interface      DEBUG    udiNetatmoEnergy:addNodes: Adding energy homes  
+
+{'id': '6592735f5d9734ca960f1c0b', 
+'name': 'Tisvilde', 
+'altitude': 27, 
+'coordinates': [12.08840014790195, 56.058290633635096], 
+'country': 'DK', 
+'timezone': 'Europe/Copenhagen', 
+'rooms': [
+	{'id': '3956476596', 'name': 'Living room', 'type': 'livingroom', 'module_ids': ['09:00:00:1e:a5:ec', '09:00:00:1e:91:9e', '09:00:00:20:66:6a']}, 
+	{'id': '3750716268', 'name': 'Bedroom', 'type': 'bedroom', 'module_ids': ['09:00:00:1f:c8:95', '09:00:00:1f:e3:17']}, 
+	{'id': '1939341551', 'name': 'Bedroom', 'type': 'bedroom', 'module_ids': ['09:00:00:1f:dc:67']}, 
+	{'id': '1685564732', 'name': 'Guestroom', 'type': 'custom', 'module_ids': ['09:00:00:1f:35:b0']}, 
+	{'id': '1514049079', 'name': 'Corridor', 'type': 'corridor', 'module_ids': ['70:ee:50:a8:10:88']}], 
+'modules': [
+	{'id': '70:ee:50:a8:10:88', 'type': 'NAPlug', 'name': 'Netatmo Relay', 'setup_date': 1704096607, 'room_id': '1514049079', 'modules_bridged': ['09:00:00:1e:a5:ec', '09:00:00:1e:91:9e', '09:00:00:20:66:6a', '09:00:00:1f:35:b0', '09:00:00:1f:dc:67', '09:00:00:1f:c8:95', '09:00:00:1f:e3:17']}, 
+	{'id': '09:00:00:1e:a5:ec', 'type': 'NRV', 'name': 'Netatmo Valve 1', 'setup_date': 1704096607, 'room_id': '3956476596', 'bridge': '70:ee:50:a8:10:88'}, 
+	{'id': '09:00:00:1e:91:9e', 'type': 'NRV', 'name': 'Netatmo Valve 2', 'setup_date': 1704096607, 'room_id': '3956476596', 'bridge': '70:ee:50:a8:10:88'}, 
+	{'id': '09:00:00:20:66:6a', 'type': 'NRV', 'name': 'Netatmo Valve 3', 'setup_date': 1704100066, 'room_id': '3956476596', 'bridge': '70:ee:50:a8:10:88'}, 
+	{'id': '09:00:00:1f:35:b0', 'type': 'NRV', 'name': 'Guestroom', 'setup_date': 1704107341, 'room_id': '1685564732', 'bridge': '70:ee:50:a8:10:88'}, 
+	{'id': '09:00:00:1f:dc:67', 'type': 'NRV', 'name': 'Matias Bedroom', 'setup_date': 1704117058, 'room_id': '1939341551', 'bridge': '70:ee:50:a8:10:88'}, 
+	{'id': '09:00:00:1f:c8:95', 'type': 'NRV', 'name': 'Master Bedroom1', 'setup_date': 1704119941, 'room_id': '3750716268', 'bridge': '70:ee:50:a8:10:88'}, 
+	{'id': '09:00:00:1f:e3:17', 'type': 'NRV', 'name': 'Master Bedroom2', 'setup_date': 1704119947, 'room_id': '3750716268', 'bridge': '70:ee:50:a8:10:88'}], 
+	'temperature_control_mode': 'heating', 
+	'therm_mode': 'away', 
+	'therm_setpoint_default_duration': 180, 
+	'schedules': [
+		{'timetable': [{'zone_id': 1, 'm_offset': 0}, {'zone_id': 0, 'm_offset': 450}, 
+		{'zone_id': 1, 'm_offset': 1320}, {'zone_id': 0, 'm_offset': 1890}, 
+		{'zone_id': 1, 'm_offset': 2760}, {'zone_id': 0, 'm_offset': 3300}, 
+		{'zone_id': 1, 'm_offset': 4200}, {'zone_id': 0, 'm_offset': 4740}, 
+		{'zone_id': 1, 'm_offset': 5640}, {'zone_id': 0, 'm_offset': 6180}, 
+		{'zone_id': 1, 'm_offset': 7080}, {'zone_id': 0, 'm_offset': 7620}, 
+		{'zone_id': 1, 'm_offset': 8580}, {'zone_id': 0, 'm_offset': 9060}, 
+		{'zone_id': 1, 'm_offset': 10020}], 
+	'zones': [
+		{	'name': 'Eco', 
+			'id': 4, 
+			'type': 5, 
+			'rooms_temp': 
+				[{'room_id': '3956476596', 'temp': 16}, 
+				{'room_id': '1685564732', 'temp': 16}, 
+				{'room_id': '1939341551', 'temp': 16}, 
+				{'room_id': '3750716268', 'temp': 16}], 
+			'modules': [], 
+			'rooms': [
+				{'id': '3956476596', 'therm_setpoint_temperature': 16}, 
+				{'id': '1685564732', 'therm_setpoint_temperature': 16}, 
+				{'id': '1939341551', 'therm_setpoint_temperature': 16}, 
+			{'id': '3750716268', 'therm_setpoint_temperature': 16}]}, 
+		{	'name': 'Comfort', 
+			'id': 0, 
+			'type': 0, 
+			'rooms_temp': [
+				{'room_id': '3956476596', 'temp': 21}, 
+				{'room_id': '1685564732', 'temp': 17}, 
+				{'room_id': '1939341551', 'temp': 17}, 
+				{'room_id': '3750716268', 'temp': 17}], 
+			'modules': [], 
+			'rooms': [{'id': '3956476596', 'therm_setpoint_temperature': 21}, 
+				{'id': '1685564732', 'therm_setpoint_temperature': 17}, 
+				{'id': '1939341551', 'therm_setpoint_temperature': 17}, 
+				{'id': '3750716268', 'therm_setpoint_temperature': 17}]}, 
+		{	'name': 'Comfort +', 
+			'id': 3, 
+			'type': 8, 
+			'rooms_temp': [
+				{'room_id': '3956476596', 'temp': 22}, 
+				{'room_id': '1685564732', 'temp': 17}, 
+				{'room_id': '1939341551', 'temp': 17}, 
+				{'room_id': '3750716268', 'temp': 17}], 
+			'modules': [], 
+			'rooms': [
+				{'id': '3956476596', 'therm_setpoint_temperature': 22}, 
+				{'id': '1685564732', 'therm_setpoint_temperature': 17}, 
+				{'id': '1939341551', 'therm_setpoint_temperature': 17}, 
+				{'id': '3750716268', 'therm_setpoint_temperature': 17}]}, 
+		{	'name': 'Night', 
+			'id': 1, 
+			'type': 1, 
+			'rooms_temp': [
+				{'room_id': '1939341551', 'temp': 19}, 
+				{'room_id': '3750716268', 'temp': 19}, 
+				{'room_id': '1685564732', 'temp': 16}, 
+				{'room_id': '3956476596', 'temp': 18}], 
+			'modules': [], 
+			'rooms': [
+				{'id': '1939341551', 'therm_setpoint_temperature': 19}, 
+				{'id': '3750716268', 'therm_setpoint_temperature': 19}, 
+				{'id': '1685564732', 'therm_setpoint_temperature': 16}, 
+				{'id': '3956476596', 'therm_setpoint_temperature': 18}]}], 
+		'name': 'My schedule', 
+		'default': False, 
+		'away_temp': 7, 
+		'hg_temp': 7, 
+		'id': '6592735f5d9734ca960f1c0c', 
+		'type': 'therm', 
+		'selected': True}]}
