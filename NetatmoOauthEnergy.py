@@ -438,14 +438,14 @@ class NetatmoCloud(OAuth):
             return(None)
         
     def get_room_online(self, home_id, room_id):
-        logging.debug('get_room_online')
+        logging.debug('get_room_online - {} {} {}'.format(home_id, room_id, self.energy_data))
         if room_id in self.energy_data[home_id]['rooms']:
             return( self.energy_data[home_id]['rooms'][room_id]['reachable'])
         else:
             return(None)
     
     def get_room_anticipating(self, home_id, room_id):
-        logging.debug('get_room_online')
+        logging.debug('get_room_anticipating')
         if room_id in self.energy_data[home_id]['rooms']:
             return( self.energy_data[home_id]['rooms'][room_id]['anticipating'])
         else:
