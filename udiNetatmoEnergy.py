@@ -23,7 +23,7 @@ except ImportError:
 
 #from NetatmoOauth import NetatmoCloud
 from NetatmoOauthEnergy import NetatmoCloud
-from  udiNetatmoEnergyHome import udiNetatmoEnergyHome
+from  udiNetatmoEnergyRoom import udiNetatmoEnergyRoom
 #from nodes.controller import Controller
 #from udi_interface import logging, Custom, Interface
 version = '0.1.1'
@@ -186,18 +186,24 @@ class NetatmoController(udi_interface.Node):
         primary_node_list = [self.id]
         for indx in range(0,len(self.home_list)):
             home = self.home_list[indx]
-            logging.debug('Adding energy homes  {}'.format(home))
+            logging.debug('Adding energy rooms  {}'.format(home))
 
-            node_name = self.poly.getValidName(home['name'])
-            self.home_id = home['id']
-            node_address = self.poly.getValidAddress(self.home_id)
+            home_name = self.poly.getValidName(home['name'])
 
-            temp = udiNetatmoEnergyHome(self.poly, node_address, node_address, node_name,  self.myNetatmo, home)
-            primary_node_list.append(node_address)
-            while not temp.node_ready:
-                logging.debug( 'Waiting for node {}-{} to be ready'.format(self.home_id, node_name))
-                time.sleep(4)
-    
+
+            if 'rooms' in home:
+                for room_indx in range(0,len(home['rooms'])):
+                    room = home['rooms'][room_indx]
+                    room_name = self.poly.getValidName(room['name'])
+                    node_name = home_name+'-'+room_name
+                    room_id = 'room'+str(room['id'])
+                    node_address = self.poly.getValidAddress(room_id)
+                    temp = udiNetatmoEnergyRoom(self.poly, node_address, node_address, node_name,  self.myNetatmo, home, room_id)
+                    primary_node_list.append(node_address)
+                    while not temp.node_ready:
+                        logging.debug( 'Waiting for node {}-{} to be ready'.format(self.home_id, node_name))
+                        time.sleep(4)
+            
         #removing unused nodes
         while not self.configDone:
             logging.info('Waiting for config to comlete')
