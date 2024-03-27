@@ -125,7 +125,7 @@ class udiNetatmoEnergyRoom(udi_interface.Node):
     def addNodes(self):
         '''addNodes'''
 
-        logging.debug('Adding rooms to {}'.format(self.name))
+        logging.debug('Adding valves to {}'.format(self.name))
 
         if 'modules' in self._home:
             for indx in range(0, len(self._home['modules'])):
@@ -156,8 +156,8 @@ class udiNetatmoEnergyRoom(udi_interface.Node):
         #logging.debug('Main module data: {}'.format(data))
         if self.node is not None:
 
-            if self.myNetatmo.get_online(self.module):
-                self.node.setDriver('ST', self.con_state2ISY(self.myNetatmo.get_room_online(self.home_id, self.room_id)))
+            if self.myNetatmo.get_room_online(self.home_id, self.room_id):
+                self.node.setDriver('ST', 1)
                 logging.debug('TempUnit = {} {}'.format(self.myNetatmo.temp_unit, self.convert_temp_unit(self.myNetatmo.temp_unit)))
                 if self.convert_temp_unit(self.myNetatmo.temp_unit) == 0:
                     self.node.setDriver('CLITEMP', round(self.myNetatmo.get_room_temp(self.home_id, self.room_id),1), True, False, 4 )
