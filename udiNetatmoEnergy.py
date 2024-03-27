@@ -187,22 +187,27 @@ class NetatmoController(udi_interface.Node):
         for indx in range(0,len(self.home_list)):
             home = self.home_list[indx]
             logging.debug('Adding energy rooms  {}'.format(home))
-
             home_name = self.poly.getValidName(home['name'])
-
-
             if 'rooms' in home:
                 for room_indx in range(0,len(home['rooms'])):
                     room = home['rooms'][room_indx]
-                    room_name = self.poly.getValidName(room['name'])
-                    node_name = home_name+'-'+room_name
-                    room_id = 'room'+str(room['id'])
-                    node_address = self.poly.getValidAddress(room_id)
-                    temp = udiNetatmoEnergyRoom(self.poly, node_address, node_address, node_name,  self.myNetatmo, home, room_id)
-                    primary_node_list.append(node_address)
-                    while not temp.node_ready:
-                        logging.debug( 'Waiting for node {}-{} to be ready'.format(self.home_id, node_name))
-                        time.sleep(4)
+                    # check if control valve is on room:
+                    valve_found = False
+                    for mod_id in room['module_ids']:
+                        for mod_idx in range(0,len(home['modules'])):
+                            logging.debug('Parsing valves {} {}'.format(mod_id,home['modules'][mod_idx] ))
+                            if home['modules'][mod_idx]['id'] == mod_id and home['modules'][mod_idx]['type'] == 'NRV':
+                                valve_found = True
+                    if valve_found:
+                        room_name = self.poly.getValidName(room['name'])
+                        node_name = home_name+'-'+room_name
+                        room_id = 'room'+str(room['id'])
+                        node_address = self.poly.getValidAddress(room_id)
+                        temp = udiNetatmoEnergyRoom(self.poly, node_address, node_address, node_name,  self.myNetatmo, home, room_id)
+                        primary_node_list.append(node_address)
+                        while not temp.node_ready:
+                            logging.debug( 'Waiting for node {}-{} to be ready'.format(self.home_id, node_name))
+                            time.sleep(2)
             
         #removing unused nodes
         while not self.configDone:

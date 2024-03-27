@@ -62,7 +62,7 @@ drivers = [
 '''
 
 class udiNetatmoEnergyRoom(udi_interface.Node):
-
+    from udiNetatmoLib import bool2ISY, t_mode2ISY, node_queue, wait_for_node_done, con_state2ISY, convert_temp_unit
     def __init__(self, polyglot, primary, address, name, myNetatmo, home, room_id):
         super().__init__(polyglot, primary, address, name)
 
@@ -110,74 +110,7 @@ class udiNetatmoEnergyRoom(udi_interface.Node):
         time.sleep(1)
 
        
-    def node_queue(self, data):
-        self.n_queue.append(data['address'])
 
-    def wait_for_node_done(self):
-        while len(self.n_queue) == 0:
-            time.sleep(0.1)
-        self.n_queue.pop()
-    
-    
-    def getValidName(self, name):
-        name = bytes(name, 'utf-8').decode('utf-8','ignore')
-        return re.sub(r"[^A-Za-z0-9_ ]", "", name)
-
-    # remove all illegal characters from node address
-    def getValidAddress(self, name):
-        name = bytes(name, 'utf-8').decode('utf-8','ignore')
-        tmp = re.sub(r"[^A-Za-z0-9_]", "", name.lower())
-        logging.debug('getValidAddress {}'.format(tmp))
-        return tmp[:14]
-    
-    def rfstate2ISY(self, rf_state):
-        if rf_state.lower() == 'full':
-            rf = 0
-        elif rf_state.lower() == 'medium':
-            rf = 1
-        elif rf_state.lower() == 'low':
-            rf = 2
-        else:
-            rf= 99
-            logging.error('Unsupported RF state {}'.format(rf_state))
-        return(rf)
-    
-
-    def battery2ISY(self, batlvl):
-        if batlvl == 'max':
-            state = 0
-        elif batlvl == 'full':
-            state = 1
-        elif batlvl == 'high':
-            state = 2
-        elif batlvl == 'medium':
-            state = 3
-        elif batlvl == 'low':
-            state = 4
-        elif batlvl == 'very low':
-            state = 5
-        else:
-            state = 99
-        return(state)
-    
-    def trend2ISY (self, trend):
-        if trend == 'stable':
-            return(0)
-        elif trend == 'up':
-            return(1)
-        elif trend =='down':
-            return(2)
-        else:
-            logging.error('unsupported temperature trend: {}'.format(trend))
-            return(99)    
-
-
-    def convert_temp_unit(self, tempStr):
-        if tempStr.capitalize()[:1] == 'F':
-            return(1)
-        elif tempStr.capitalize()[:1] == 'C':
-            return(0)
-        
     
 
 
@@ -197,13 +130,12 @@ class udiNetatmoEnergyRoom(udi_interface.Node):
         if 'modules' in self._home:
             for indx in range(0, len(self._home['modules'])):
                 valve_info = self._home['modules'][indx]
-                if valve_info['room_id'] == self.room_id:
-
+                if valve_info['room_id'] == self.room_id and valve_info['type'] == 'NRV':
                     valve_name = valve_info['name']
                     node_name = self.poly.getValidName(valve_name)
                     valve_id = valve_info['id']
                     node_address = self.poly.getValidAddress(valve_id)
-                    tmp_room = udiNetatmoEnergyValve(self.poly, self.primary, node_address, node_name, self.myNetatmo, valve_id)
+                    tmp_room = udiNetatmoEnergyValve(self.poly, self.primary, node_address, node_name, self.myNetatmo, self.home_id,  valve_id)
                     while not tmp_room.node_ready:
                         logging.debug( 'Waiting for node {}-{} to be ready'.format(valve_id, node_name))
                         time.sleep(4)
@@ -212,8 +144,7 @@ class udiNetatmoEnergyRoom(udi_interface.Node):
 
                 
     def update(self, command = None):
-
-        self.myNetatmo.get_home_status(self.home_id)
+        self.myNetatmo.get_home_status(self._home)
         #self.myNetatmo.update_weather_info_instant(self.module['home_id'])
         self.updateISYdrivers()
 
@@ -224,52 +155,42 @@ class udiNetatmoEnergyRoom(udi_interface.Node):
         #data = self.myNetatmo.get_module_data(self.module)
         #logging.debug('Main module data: {}'.format(data))
         if self.node is not None:
+
             if self.myNetatmo.get_online(self.module):
-                self.node.setDriver('ST', 1)
+                self.node.setDriver('ST', self.con_state2ISY(self.myNetatmo.get_room_online(self.home_id, self.room_id)))
                 logging.debug('TempUnit = {} {}'.format(self.myNetatmo.temp_unit, self.convert_temp_unit(self.myNetatmo.temp_unit)))
                 if self.convert_temp_unit(self.myNetatmo.temp_unit) == 0:
-                    self.node.setDriver('CLITEMP', round(self.myNetatmo.get_temperature_C(self.module),1), True, False, 4 )
-                    self.node.setDriver('GV6', round(self.myNetatmo.get_min_temperature_C(self.module),1), True, False, 4 )
-                    self.node.setDriver('GV7', round(self.myNetatmo.get_max_temperature_C(self.module),1), True, False, 4 )
+                    self.node.setDriver('CLITEMP', round(self.myNetatmo.get_room_temp(self.home_id, self.room_id),1), True, False, 4 )
+                    self.node.setDriver('CLISPH', round(self.myNetatmo.get_room_setpoint_temp(self.home_id, self.room_id),1), True, False, 4 )
                 else:
-                    self.node.setDriver('CLITEMP', (round(self.myNetatmo.get_temperature_C(self.module)*9/5+32,1)), True, False, 17 )
-                    self.node.setDriver('GV6', (round(self.myNetatmo.get_min_temperature_C(self.module)*9/5+32,1)), True, False, 17 )
-                    self.node.setDriver('GV7', (round(self.myNetatmo.get_max_temperature_C(self.module)*9/5+32,1)), True, False, 17 )                     
-                self.node.setDriver('CO2LVL', self.myNetatmo.get_co2(self.module), True, False, 54)
-                self.node.setDriver('CLIHUM', self.myNetatmo.get_humidity(self.module), True, False, 51)
-                self.node.setDriver('GV3', round(self.myNetatmo.get_noise(self.module),0), True, False, 12)
-                self.node.setDriver('BARPRES', round(self.myNetatmo.get_pressure(self.module),0), True, False, 117)
-                self.node.setDriver('GV5', round(self.myNetatmo.get_abs_pressure(self.module),0), True, False, 117)
-
-                temp_trend = self.myNetatmo.get_temp_trend(self.module)
-                self.node.setDriver('GV8', self.trend2ISY(temp_trend))
-
-                #hum_trend= self.myNetatmo.get_hum_trend(self.module)
-                #self.node.setDriver('GV9', trend_val)
-                self.node.setDriver('GV10', self.myNetatmo.get_time_since_time_stamp_min(self.module) , True, False, 44)
-                rf1, rf2 = self.myNetatmo.get_rf_info(self.module) 
-                self.node.setDriver('GV11', self.rfstate2ISY(rf1) )
-                #self.node.setDriver('ERR', 0)    
+                    self.node.setDriver('CLITEMP', (round(self.myNetatmo.get_room_temp(self.home_id, self.room_id))*9/5+32,1), True, False, 17 )
+                    self.node.setDriver('CLISPH', (round(self.myNetatmo.get_room_setpoint_temp(self.home_id, self.room_id))*9/5+32,1), True, False, 17 )
+                self.node.setDriver('CLIMD', self.t_mode2ISY(self.myNetatmo.get_room_setpoint_mode(self.home_id, self.room_id)))
+                self.node.setDriver('GV0', self.myNetatmo.get_room_heat_power_request(self.home_id, self.room_id), True, False, 0)
+                self.node.setDriver('GV1', self.bool2ISY(self.myNetatmo.get_room_open_window(self.home_id, self.room_id)))
+                self.node.setDriver('GV2', self.bool2ISY(self.myNetatmo.get_room_anticipating(self.home_id, self.room_id)))
+                self.node.setDriver('GV3', 0, True, True, 44)
+ 
             else:
                 self.node.setDriver('CLITEMP', 99, True, False, 25 )
-                self.node.setDriver('GV6', 99, True, False, 25 )
-                self.node.setDriver('GV7', 99, True, False, 25 )
-                self.node.setDriver('CO2LVL', 99, True, False, 25 )
-                self.node.setDriver('CLIHUM', 99, True, False, 25 )
+                self.node.setDriver('CLISPH', 99, True, False, 25 )
+                self.node.setDriver('CLIMD', 99, True, False, 25 )
+                self.node.setDriver('GV0', 99, True, False, 25 )
+                self.node.setDriver('GV1', 99, True, False, 25 )
+                self.node.setDriver('GV2', 99, True, False, 25 )
                 self.node.setDriver('GV3', 99, True, False, 25 )
-                self.node.setDriver('BARPRES', 99, True, False, 25 )
-                self.node.setDriver('GV5', 99, True, False, 25 )
-                self.node.setDriver('GV8', 99, True, False, 25 )
-                #self.node.setDriver('GV9', 99, True, False, 25 )
-                self.node.setDriver('GV10', 99, True, False, 25 )
-                self.node.setDriver('GV11', 99, True, False, 25 )
                 self.node.setDriver('ST', 0) 
-                #self.node.setDriver('ERR', 1)                     
+                  
+    def set_set_point(self, command):
+        logging.debug('set_set_point {} called'.format(command))
 
-
+    def set_opmode(self, command):
+        logging.debug('set_opmode {} called'.format(command))
 
     commands = {        
-                'UPDATE': update,
+                'UPDATE'    : update,
+                'SETPOINT'  : set_set_point,
+                'OPMODE'    : set_opmode,
                 }
 
         

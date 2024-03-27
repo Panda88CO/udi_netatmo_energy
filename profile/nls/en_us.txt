@@ -10,7 +10,7 @@ ST-n_room-CLITEMP-NAME = Temperature
 ST-n_room-CLISPH-NAME = Set Point
 ST-n_room-CLIMD-NAME = Mode
 ST-n_room-GV0-NAME = Energy Request
-ST-n_n_roomroom-GV1-NAME = Windown Open
+ST-n_room-GV1-NAME = Windown Open
 ST-n_room-GV2-NAME = Predictive
 ST-MAIN-GV3-NAME = Time Since Update
 

@@ -403,68 +403,7 @@ class NetatmoCloud(OAuth):
         if home_id in self.homes_list:
             return(self.homes_list[home_id]['name'])
 
-    '''
-    def update_energy_info_cloud (self, home_id):
-        Polls latest data stored in cloud - more data available
-        logging.debug('get_energy_info_cloud')
-        try:
-            tmp = self.get_modules(home_id)
-            logging.debug('tmp = {}'.format(tmp))
-            self.cloud_data[home_id] = {}
-            for dev_id in tmp:
-                if tmp[dev_id]['type'] in self.GW_modules:
-                    
-                    dev_id_str = urllib.parse.quote_plus(dev_id )
 
-                    api_str = '/getstationsdata?device_id='+str(dev_id_str)+'&get_favorites=false'
-                    
-                    temp_data = self._callApi('GET', api_str )
-
-                    logging.debug('dev Id {}, data: {} '.format(dev_id, temp_data))
-
-                    #test = self._callApi('GET', '/getstationsdata' )
-                    #logging.debug(temp_data)
-                    if 'status'  in temp_data:
-                        if temp_data['status'] == 'ok':
-                            if len(temp_data['body']['devices'] ) == 1:
-                                temp_data = temp_data['body']['devices'][0]  # there should only be 1 dev_id
-                            else:
-                                logging.error('Code only handles 1st main energy station : {} found'.format(len(temp_data['body']['devices'])))
-                                logging.error('Processing first one')
-                                temp_data = temp_data['body']['devices'][0]
-                            logging.debug('past temp data {}'.format(temp_data))
-                            self.cloud_data[home_id] = {}
-                            self.cloud_data[home_id]['GW'] = {}
-                            self.cloud_data[home_id]['INDOOR'] = {}
-                            self.cloud_data[home_id]['OUTDOOR'] = {}
-                            self.cloud_data[home_id]['RAIN'] = {}
-                            self.cloud_data[home_id]['WIND'] = {}
-                            self.cloud_data[home_id]['GW'][dev_id] = {}
-                            self.cloud_data[home_id]['GW'][dev_id]['reachable'] = temp_data['reachable']
-                            self.cloud_data[home_id]['GW'][dev_id]['data_type'] = temp_data['data_type']
-                            if 'dashboard_data' in temp_data:
-                                self.cloud_data[home_id]['GW'][dev_id] = temp_data['dashboard_data']
-                                self.cloud_data[home_id]['GW'][dev_id]['online'] = True
-                            else:
-                                self.cloud_data[home_id]['GW'][dev_id]['online'] = True
-                            logging.debug('past main {}'.format(self.cloud_data))
-                            for module in range(0,len(temp_data['modules'])):
-                                mod = temp_data['modules'][module]
-                                logging.debug('{} {}c data {}, mod  {}'.format(self.module_type(mod['type']),mod['_id'], self.cloud_data, mod))
-                                self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']] = {}
-                                if 'dashboard_data' in mod:
-                                    self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']]['online'] = True 
-                                    self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']] = mod['dashboard_data']
-                                else:
-                                    self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']]['online'] = False                                   
-                                self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']]['data_type'] = mod['data_type']
-                        logging.debug('data before merge: {}'.format(self.cloud_data))
-                        self.merge_data(home_id)         
-            return(self.cloud_data)
-        except Exception as e:
-            logging.error('update_energy_info_cloud failed : {}'.format(e))
-            return({})
-    '''
 
     def module_type (self, type):
         if type in self.GW_modules:
@@ -476,6 +415,87 @@ class NetatmoCloud(OAuth):
               
 
     
+    def get_room_temp(self, home_id, room_id):
+        logging.debug('get_room_temp')
+        if room_id in self.energy_data[home_id]['rooms']:
+            return( self.energy_data[home_id]['rooms'][room_id]['therm_measured_temperature'])
+        else:
+            return(None)
+        
+    def get_room_setpoint_temp(self, home_id, room_id):
+        logging.debug('get_room_set_point_temp')
+        if room_id in self.energy_data[home_id]['rooms']:
+            return( self.energy_data[home_id]['rooms'][room_id]['therm_setpoint_temperature'])
+        else:
+            return(None)
+
+
+    def get_room_setpoint_mode(self, home_id, room_id):
+        logging.debug('get_room_set_point_mode')
+        if room_id in self.energy_data[home_id]['rooms']:
+            return( self.energy_data[home_id]['rooms'][room_id]['therm_setpoint_mode'])
+        else:
+            return(None)
+        
+    def get_room_online(self, home_id, room_id):
+        logging.debug('get_room_online')
+        if room_id in self.energy_data[home_id]['rooms']:
+            return( self.energy_data[home_id]['rooms'][room_id]['reachable'])
+        else:
+            return(None)
+    
+    def get_room_anticipating(self, home_id, room_id):
+        logging.debug('get_room_online')
+        if room_id in self.energy_data[home_id]['rooms']:
+            return( self.energy_data[home_id]['rooms'][room_id]['anticipating'])
+        else:
+            return(None)
+        
+    def get_room_heat_power_request(self, home_id, room_id):
+        logging.debug('get_room_heat_power_request')
+        if room_id in self.energy_data[home_id]['rooms']:
+            return( self.energy_data[home_id]['rooms'][room_id]['heating_power_request'])
+        else:
+            return(None)
+
+
+    def get_room_open_window(self, home_id, room_id):
+        logging.debug('get_room_open_window')
+        if room_id in self.energy_data[home_id]['rooms']:
+            return( self.energy_data[home_id]['rooms'][room_id]['open_window'])
+        else:
+            return(None)
+
+
+    def get_valve_online(self, home_id, valve_id):
+        logging.debug('get_valve_online')
+        if valve_id in self.energy_data[home_id]['modules']: 
+                return( self.energy_data[home_id]['rooms'][valve_id]['reachable'])
+        else:
+            return(None)
+
+    def get_valve_bat_state(self, home_id, valve_id):
+        logging.debug('get_valve_bat_state')
+        if valve_id in self.energy_data[home_id]['modules']:
+            return( self.energy_data[home_id]['rooms'][valve_id]['battery_state'])
+        else:
+            return(None)
+
+    def get_valve_bat_level(self, home_id, valve_id):
+        logging.debug('get_valve_bat_level')
+        if valve_id in self.energy_data[home_id]['modules']:
+            return( self.energy_data[home_id]['rooms'][valve_id]['battery_level'])
+        else:
+            return(None)
+
+    def get_valve_rf_strength(self, home_id, valve_id):
+        logging.debug('get_valve_rf_strength')
+        if valve_id in self.energy_data[home_id]['modules']:
+            return( self.energy_data[home_id]['rooms'][valve_id]['rf_strength'])
+        else:
+            return(None)
+
+
     def get_energy_homes(self):
         '''    def get_energy_homes(self):'''
         home_list = self.get_homes_info()

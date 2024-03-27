@@ -21,6 +21,76 @@ def wait_for_node_done(self):
         time.sleep(0.1)
     self.n_queue.pop()
 
+
+
+def rfstate2ISY(self, rf_state):
+    if rf_state.lower() == 'full':
+        rf = 0
+    elif rf_state.lower() == 'medium':
+        rf = 1
+    elif rf_state.lower() == 'low':
+        rf = 2
+    else:
+        rf= 99
+        logging.error('Unsupported RF state {}'.format(rf_state))
+    return(rf)
+
+def t_mode2ISY(self, mode):
+    if mode == 'schedule':
+        mod = 0
+    elif mode =='away':
+        mod = 1
+    elif mode == 'hg':
+        mod = 2
+    else:
+        mod = 99
+    return(mod)
+
+def battery2ISY(self, batlvl):
+    if batlvl == 'max':
+        state = 0
+    elif batlvl == 'full':
+        state = 1
+    elif batlvl == 'high':
+        state = 2
+    elif batlvl == 'medium':
+        state = 3
+    elif batlvl == 'low':
+        state = 4
+    elif batlvl == 'very low':
+        state = 5
+    else:
+        state = 99
+    return(state)
+
+def trend2ISY (self, trend):
+    if trend == 'stable':
+        return(0)
+    elif trend == 'up':
+        return(1)
+    elif trend =='down':
+        return(2)
+    else:
+        logging.error('unsupported temperature trend: {}'.format(trend))
+        return(99)    
+
+def con_state2ISY(self, state):
+    if state == None:
+        con = 99
+    elif state == False:
+        con = 0
+    else:
+        con = 1
+    return(con)
+
+def convert_temp_unit(self, tempStr):
+    if tempStr.capitalize()[:1] == 'F':
+        return(1)
+    elif tempStr.capitalize()[:1] == 'C':
+        return(0)
+        
+
+
 def mask2key (self, mask):
     logging.debug('mask2key : {}'.format(mask))
     return(int(round(math.log2(mask),0)))
