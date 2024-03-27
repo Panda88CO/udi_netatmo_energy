@@ -183,7 +183,7 @@ class NetatmoController(udi_interface.Node):
 
     def addNodes(self):
         
-        logging.info('Adding selected homes')
+        logging.info('Adding rooms of selected homes')
         selected = False
         #primary_gateway_list = ['NAPlug'] # controller is there for sure 
         primary_node_list = [self.id]

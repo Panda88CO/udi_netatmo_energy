@@ -339,7 +339,7 @@ class NetatmoCloud(OAuth):
 
     def get_home_status(self, home_id):
         status = {}
-        logging.debug('get_home_status')
+        logging.debug('get_home_status {}'.format(home_id))
         try:
             if home_id:
                 home_id_str = urllib.parse.quote_plus(home_id)
