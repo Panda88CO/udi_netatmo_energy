@@ -337,16 +337,16 @@ class NetatmoCloud(OAuth):
         return(self.homes_list)
 
 
-    def get_home_status(self, home_id, dev_type =''):
+    def get_home_status(self, home_id):
         status = {}
         logging.debug('get_home_status')
         try:
             if home_id:
                 home_id_str = urllib.parse.quote_plus(home_id)
-                if dev_type == '':
-                    api_str = '/homestatus?home_id='+str(home_id_str)
-                else:
-                    api_str = '/homestatus?home_id='+str(home_id_str)+'&'+str(dev_type)
+                #if dev_type == '':
+                api_str = '/homestatus?home_id='+str(home_id_str)
+                #else:
+                #    api_str = '/homestatus?home_id='+str(home_id_str)+'&'+str(dev_type)
 
                 tmp = self._callApi('GET', api_str)
                 logging.debug('get_home_status - tmp: {}'.format(tmp))
