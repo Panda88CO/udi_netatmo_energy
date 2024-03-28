@@ -41,7 +41,7 @@ drivers = [
 '''
 
 class udiNetatmoEnergyValve(udi_interface.Node):
-    from udiNetatmoLib import bool2ISY, t_mode2ISY,  node_queue, wait_for_node_done, battery2ISY, state2ISY
+    from udiNetatmoLib import bool2ISY, t_mode2ISY,  node_queue, wait_for_node_done, battery2ISY, con_state2ISY
 
     def __init__(self, polyglot, primary, address, name, myNetatmo, home,  valve_id):
         super().__init__(polyglot, primary, address, name)
