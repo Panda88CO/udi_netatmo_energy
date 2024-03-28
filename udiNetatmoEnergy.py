@@ -45,7 +45,7 @@ class NetatmoController(udi_interface.Node):
         self.poly = polyglot
 
         self.id = 'controller'
-        self.drivers =  [ {'driver': 'ST', 'value':0, 'uom':2}, ]
+        self.drivers =  [ {'driver': 'ST', 'value':0, 'uom':25}, ]
         self.accessTokenEn = True
         self.accessToken = None
         self.nodeDefineDone = False
