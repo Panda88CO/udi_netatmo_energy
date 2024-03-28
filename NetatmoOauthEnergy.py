@@ -482,21 +482,21 @@ class NetatmoCloud(OAuth):
     def get_valve_bat_state(self, home_id, valve_id):
         logging.debug('get_valve_bat_state')
         if valve_id in self.energy_data[home_id]['modules']:
-            return( self.energy_data[home_id]['rooms'][valve_id]['battery_state'])
+            return( self.energy_data[home_id]['modules'][valve_id]['battery_state'])
         else:
             return(None)
 
     def get_valve_bat_level(self, home_id, valve_id):
         logging.debug('get_valve_bat_level')
         if valve_id in self.energy_data[home_id]['modules']:
-            return( self.energy_data[home_id]['rooms'][valve_id]['battery_level'])
+            return( self.energy_data[home_id]['modules'][valve_id]['battery_level'])
         else:
             return(None)
 
     def get_valve_rf_strength(self, home_id, valve_id):
         logging.debug('get_valve_rf_strength')
         if valve_id in self.energy_data[home_id]['modules']:
-            return( self.energy_data[home_id]['rooms'][valve_id]['rf_strength'])
+            return( self.energy_data[home_id]['modules'][valve_id]['rf_strength'])
         else:
             return(None)
 
