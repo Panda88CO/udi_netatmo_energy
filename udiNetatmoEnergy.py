@@ -250,14 +250,7 @@ class NetatmoController(udi_interface.Node):
 
         #self.poly.discoverDevices()
 
-    '''
-    def addNodeDoneHandler(self, data):
-        self.n_queue.append(data['address'])
-        # We will automatically query the device after discovery
-        #self.poly.addNodeDoneHandler(node)
-        #self.nodeDefineDone = True
-        #pass
-    '''
+
     def systemPoll (self, polltype):
         if self.nodeDefineDone:
             logging.info('System Poll executing: {}'.format(polltype))
