@@ -176,7 +176,7 @@ class NetatmoController(udi_interface.Node):
             time.sleep(1)
         #update data
         for home in self.home_list:
-            self.myNetatmo.get_home_status(home)
+            self.myNetatmo.get_home_status(home['id'])
         self.addNodes()
         self.wait_for_node_done()
 
@@ -270,7 +270,7 @@ class NetatmoController(udi_interface.Node):
                     #self.myNetatmo.refresh_token()
                     self.myNetatmo.get_homes_info()
                     for home in self.myNetatmo.homes_list:
-                        self.myNetatmo.get_home_status(home)
+                        self.myNetatmo.get_home_status(home['id'])
                         #self.myNetatmo.update_weather_info_instant(home)
 
 
@@ -284,7 +284,7 @@ class NetatmoController(udi_interface.Node):
                     self.heartbeat()
                     #self.myNetatmo.refresh_token()
                     for home in self.myNetatmo.homes_list:
-                        self.myNetatmo.get_home_status(home)
+                        self.myNetatmo.get_home_status(home['id'])
                     for nde in nodes:
                         if nde.address != 'controller':   # but not the setup node
                             logging.debug('updating node {} data'.format(nde))

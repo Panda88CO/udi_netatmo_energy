@@ -111,7 +111,7 @@ class udiNetatmoEnergyValve(udi_interface.Node):
 
 
     def update(self, command = None):
-        self.myNetatmo.self.myNetatmo.get_home_status(self._home)
+        self.myNetatmo.self.myNetatmo.get_home_status(self._home['id'])
         self.updateISYdrivers()
 
 
