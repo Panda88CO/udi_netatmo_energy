@@ -125,7 +125,7 @@ class udiNetatmoEnergyRoom(udi_interface.Node):
     def addNodes(self):
         '''addNodes'''
 
-        logging.debug('Adding valves to {}'.format(self.name, self._home))
+        logging.debug('Adding valves to {} {}'.format(self.name, self._home))
 
         if 'modules' in self._home:
             for indx in range(0, len(self._home['modules'])):

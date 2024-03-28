@@ -204,10 +204,11 @@ class NetatmoController(udi_interface.Node):
                     if valve_found:
                         room_name = self.poly.getValidName(room['name'])
                         node_name = home_name+'-'+room_name
-                        room_id = 'room'+str(room['id'])
-                        node_address = self.poly.getValidAddress(room_id)
-                        logging.debug('adding room node : {} {} {} {} {} {}'.format(node_address, node_address, node_name,  self.myNetatmo, home, room_id))
-                        temp = udiNetatmoEnergyRoom(self.poly, node_address, node_address, node_name,  self.myNetatmo, home, room_id)
+                        #self.room_id = room['id']
+                        room_node = 'room'+str(room['id'])
+                        node_address = self.poly.getValidAddress(room_node)
+                        logging.debug('adding room node : {} {} {} {} {} {}'.format(node_address, node_address, node_name,  self.myNetatmo, home, room['id']))
+                        temp = udiNetatmoEnergyRoom(self.poly, node_address, node_address, node_name,  self.myNetatmo, home, room['id'])
                         primary_node_list.append(node_address)
                         while not temp.node_ready:
                             logging.debug( 'Waiting for node {}-{} to be ready'.format(self.home_id, node_name))
