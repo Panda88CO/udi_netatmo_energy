@@ -97,7 +97,7 @@ class udiNetatmoEnergyValve(udi_interface.Node):
                 self.node.setDriver('ST',1)
                 self.node.setDriver('BATLVL', self.myNetatmo.get_valve_bat_level(self.home_id, self.valve_id), True, True, 0)
                 self.node.setDriver('GV0', self.battery2ISY(self.myNetatmo.get_valve_bat_state(self.home_id, self.valve_id)))
-                self.node.setDriver('GV1', self.get_valve_rf_strength(self.home_id, self.valve_id), False, False, 131)
+                self.node.setDriver('GV1', self.myNetatmo.get_valve_rf_strength(self.home_id, self.valve_id), False, False, 131)
 
             else:
                 self.node.setDriver('BATLVL', 99, True, False, 25 )
