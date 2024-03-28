@@ -351,6 +351,7 @@ class NetatmoCloud(OAuth):
                 tmp = self._callApi('GET', api_str)
                 logging.debug('get_home_status - tmp: {}'.format(tmp))
                 if tmp:
+                    meas_time = tmp['time_server']
                     tmp = tmp['body']
                     if 'errors' not in tmp:
                         tmp = tmp['home']
@@ -370,8 +371,9 @@ class NetatmoCloud(OAuth):
                         #status['module_types'] = []
                         for indx in range(0,len(tmp['rooms'])):              
                             status['rooms'][tmp['rooms'][indx]['id']]=  tmp['rooms'][indx]
-    
+                    status['meas_time'] = meas_time
                     self.energy_data[home_id] = status
+                
                     logging.debug('energy_data : {} {}'.format(home_id, self.energy_data ))
                     return(status)
         except Exception as e:
@@ -403,7 +405,7 @@ class NetatmoCloud(OAuth):
         if home_id in self.homes_list:
             return(self.homes_list[home_id]['name'])
 
-
+    
 
     def module_type (self, type):
         if type in self.GW_modules:
@@ -413,7 +415,10 @@ class NetatmoCloud(OAuth):
         if type in self.thermostat:
             return('THERMOSTAT')
               
-
+    def get_time_since_last_update_sec(self, home_id):
+        timenow = int(time.time())
+        delay_s = int(timenow - self.energy_data[home_id]['meas_time'])
+        return(delay_s)
     
     def get_room_temp(self, home_id, room_id):
         logging.debug('get_room_temp')

@@ -173,7 +173,7 @@ class udiNetatmoEnergyRoom(udi_interface.Node):
                 self.node.setDriver('GV0', self.myNetatmo.get_room_heat_power_request(self.home_id, self.room_id), True, False, 0)
                 self.node.setDriver('GV1', self.bool2ISY(self.myNetatmo.get_room_open_window(self.home_id, self.room_id)))
                 self.node.setDriver('GV2', self.bool2ISY(self.myNetatmo.get_room_anticipating(self.home_id, self.room_id)))
-                self.node.setDriver('GV3', 0, True, True, 44)
+                self.node.setDriver('GV3', int(self.myNetatmo.get_time_since_last_update_sec(self.home_id)/60), True, True, 44)
  
             else:
                 self.node.setDriver('CLITEMP', 99, True, False, 25 )
