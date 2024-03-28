@@ -475,7 +475,7 @@ class NetatmoCloud(OAuth):
     def get_valve_online(self, home_id, valve_id):
         logging.debug('get_valve_online')
         if valve_id in self.energy_data[home_id]['modules']: 
-                return( self.energy_data[home_id]['rooms'][valve_id]['reachable'])
+                return( self.energy_data[home_id]['modules'][valve_id]['reachable'])
         else:
             return(None)
 
