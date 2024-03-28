@@ -66,7 +66,6 @@ class udiNetatmoEnergyValve(udi_interface.Node):
         self.poly.subscribe(self.poly.START, self.start, address)
         #self.poly.subscribe(self.poly.STOP, self.stop)
         self.poly.subscribe(self.poly.ADDNODEDONE, self.node_queue)
-
         self.poly.ready()
         self.poly.addNode(self)
         self.wait_for_node_done()

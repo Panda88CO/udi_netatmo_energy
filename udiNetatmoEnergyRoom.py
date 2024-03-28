@@ -125,17 +125,18 @@ class udiNetatmoEnergyRoom(udi_interface.Node):
     def addNodes(self):
         '''addNodes'''
 
-        logging.debug('Adding valves to {}'.format(self.name))
+        logging.debug('Adding valves to {}'.format(self.name, self._home))
 
         if 'modules' in self._home:
             for indx in range(0, len(self._home['modules'])):
                 valve_info = self._home['modules'][indx]
+                logging.debug('Valve check {} {}'.format( self.room_id, valve_info))
                 if valve_info['room_id'] == self.room_id and valve_info['type'] == 'NRV':
                     valve_name = valve_info['name']
                     node_name = self.poly.getValidName(valve_name)
                     valve_id = valve_info['id']
                     node_address = self.poly.getValidAddress(valve_id)
-                    logging.debug('adding room node : {} {} {} {} {} {}'.format( self.primary, node_address, node_name, self.myNetatmo, self._home,  valve_id))
+                    logging.debug('adding valve node : {} {} {} {} {} {}'.format( self.primary, node_address, node_name, self.myNetatmo, self._home,  valve_id))
 
                     tmp_room = udiNetatmoEnergyValve(self.poly, self.primary, node_address, node_name, self.myNetatmo, self._home,  valve_id)
                     while not tmp_room.node_ready:
